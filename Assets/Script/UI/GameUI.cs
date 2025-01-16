@@ -1,6 +1,12 @@
 using System;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
+using System.Net;
+using System.Net.Sockets;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public enum cameraAngle{
     menu = 0,
@@ -17,6 +23,8 @@ public class GameUI : MonoBehaviour
 
     [SerializeField] private Animator menuAnimator;
     [SerializeField] private TMP_InputField addressInput;
+    [SerializeField] private TMP_Text numberPlayerWaitingGame;
+    [SerializeField] private Button startButton;
     [SerializeField] private GameObject[] cameraAngles;
 
     public Action<bool> SetLocalGame;
@@ -38,6 +46,11 @@ public class GameUI : MonoBehaviour
     }
 
 
+    void Update()
+    {
+        numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/4)";
+    }
+
     //Button
 
     public void OnLocalButton()
@@ -56,15 +69,18 @@ public class GameUI : MonoBehaviour
     public void OnOnlineHostButton()
     {
         SetLocalGame?.Invoke(false);
+        
         server.Init(8007);
-        client.Init("127.0.0.1", 8007);
+        client.Init("82.66.188.111", 8007);
         menuAnimator.SetTrigger("HostMenu");
     }
 
     public void OnOnlineConnectButton()
     {
         SetLocalGame?.Invoke(false);
+        
         client.Init(addressInput.text, 8007);
+        startButton.gameObject.SetActive(false);
         menuAnimator.SetTrigger("HostMenu");
     }
 
@@ -78,6 +94,16 @@ public class GameUI : MonoBehaviour
         server.Shutdown();
         client.Shutdown();
         menuAnimator.SetTrigger("OnlineMenu");
+    }
+
+    public void OnHostStartGameButton()
+    {
+        if(DjambiBoard.Instance.GetPlayerCount() < 1)
+        {
+            return;
+        }
+        Server.Instance.BroadCast(new NetStartGame());
+        //start game if 2 player 3 or 4 or 5 or 6 change game board
     }
 
      private void RegisterEvents()

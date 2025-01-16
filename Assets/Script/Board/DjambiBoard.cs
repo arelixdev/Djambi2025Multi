@@ -25,6 +25,7 @@ public class DjambiBoard : MonoBehaviour
     private int keepTeamWithoutChef = 0;
     public bool chefTurn;
     public List<int> chefEncercled = new List<int>();
+    public PieceType movePieceAgain;
 
     private PieceType[,] boardPieces;
     private PieceType currentlyDragging;
@@ -60,6 +61,12 @@ public class DjambiBoard : MonoBehaviour
     private int currentTeam = -1;
     private int numberPieces = -1;
     private bool localGame = true;
+    private bool startGame;
+
+    public int GetPlayerCount()
+    {
+        return playerCount;
+    }
 
 
     private void Awake() {
@@ -71,16 +78,25 @@ public class DjambiBoard : MonoBehaviour
         TurnInterfaceManager.instance.SetTurn(teamTurn);
 
         GenerateAllTiles(tileSize, TILE_COUNT_X, TILE_COUNT_Y);
+        RegisterEvents();
+    }
 
+    private void InitBoardUnit()
+    {
+        startGame = true;
         SpawnAllPieces();
         PositionAllPieces();
-
-        RegisterEvents();
     }
     private void Update() {
         if(!currentCamera)
         {
             currentCamera = Camera.main;
+            return;
+        }
+
+
+        if(!startGame)
+        {
             return;
         }
 
@@ -139,8 +155,20 @@ public class DjambiBoard : MonoBehaviour
                 if(ContainsValidMove(ref availableMoves, new Vector2(hitPosition.x, hitPosition.y)))
                 {
                     int pieceId = currentlyDragging.pieceId;
+                    PieceType piece = currentlyDragging;
                     MoveTo(currentlyDragging.pieceId, hitPosition.x, hitPosition.y);
 
+
+                    if(piece.form == PieceForm.Reporter)
+                    {
+                        List<PieceType> adjacentEnemies = GetAdjacentPieces(piece.currentX, piece.currentY, piece.team);
+
+                        if (adjacentEnemies.Count > 0)
+                        {
+                            piece.GetComponent<Reporter>().ReporterAction(adjacentEnemies);
+                            Debug.Log("Reporter action");
+                        } 
+                    }
 
                     //Net Implementation
                     NetMakeMove nm = new NetMakeMove();
@@ -148,7 +176,7 @@ public class DjambiBoard : MonoBehaviour
                     nm.destinationX = hitPosition.x;
                     nm.destinationY = hitPosition.y;
                     nm.teamId = currentTeam;
-                    if(movePieceDragging == null)
+                    if(movePieceDragging == null && !reporterAction)
                     {
                         nm.endTurn = 1;
                     } else 
@@ -164,26 +192,7 @@ public class DjambiBoard : MonoBehaviour
                     RemoveHighlightTiles();
                     
                 }
-
-                
-                
-                //TODO revoir le fonctionnement du reporter
-                /*else {
-                    if(currentlyDragging.form == PieceForm.Reporter)
-                    {
-                        List<PieceType> adjacentEnemies = GetAdjacentPieces(currentlyDragging.currentX, currentlyDragging.currentY, currentlyDragging.team);
-
-                        if (adjacentEnemies.Count > 0)
-                        {
-                            currentlyDragging.GetComponent<Reporter>().ReporterAction(adjacentEnemies);
-                        } else{
-                            ChangeTurn();
-                        }
-                    }
-
-        
-                    currentlyDragging = null;
-                }*/
+                currentlyDragging = null;
 
                 
             }
@@ -215,6 +224,10 @@ public class DjambiBoard : MonoBehaviour
                 if(boardPieces[hitPosition.x, hitPosition.y] != null && !boardPieces[hitPosition.x, hitPosition.y].isDead && reporterTargets.Contains(boardPieces[hitPosition.x, hitPosition.y]))
                 {
                     boardPieces[hitPosition.x, hitPosition.y].Die();
+                    //Net Implementation
+                    NetMakeKill nm = new NetMakeKill();
+                    nm.pieceId = boardPieces[hitPosition.x, hitPosition.y].pieceId;
+                    Client.Instance.SendToServer(nm);
                     if(boardPieces[hitPosition.x, hitPosition.y].form == PieceForm.Chef)
                     {
                         //All EnemyUnits switch to your team 
@@ -222,8 +235,10 @@ public class DjambiBoard : MonoBehaviour
                     }
                     reporterTargets.Clear();
                     reporterPiece = null;
-                    ChangeTurn();
+                    //ChangeTurn();
                     reporterAction = false;
+
+                    
                 }
             }
         } else {
@@ -332,11 +347,11 @@ public class DjambiBoard : MonoBehaviour
         boardPieces[1, 0] = SpawnSinglePiece(PieceForm.Assassin, redTeam);
         boardPieces[2, 0] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 1] = SpawnSinglePiece(PieceForm.Reporter, redTeam);
-        boardPieces[1, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
+        /*boardPieces[1, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
         boardPieces[2, 1] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[1, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
-        boardPieces[2, 2] = SpawnSinglePiece(PieceForm.Necromobile, redTeam);
+        boardPieces[2, 2] = SpawnSinglePiece(PieceForm.Necromobile, redTeam);*/
 
 
         //Blue team
@@ -345,7 +360,7 @@ public class DjambiBoard : MonoBehaviour
         boardPieces[6, 0] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[8, 1] = SpawnSinglePiece(PieceForm.Reporter, blueTeam);
         boardPieces[7, 1] = SpawnSinglePiece(PieceForm.Diplomate, blueTeam);
-        boardPieces[4, 1] = SpawnSinglePiece(PieceForm.Militant, blueTeam); //TODO move back to 6,1
+        boardPieces[6, 1] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[8, 2] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[7, 2] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[6, 2] = SpawnSinglePiece(PieceForm.Necromobile, blueTeam);
@@ -802,7 +817,7 @@ public class DjambiBoard : MonoBehaviour
     }
 
 
-    public PieceType movePieceAgain;
+    
 
     private void TeamSwitch(int teamChange, int teamTo)
     {
@@ -891,7 +906,9 @@ public class DjambiBoard : MonoBehaviour
         reporterPiece = actionPiece;
         reporterTargets = targets;
         reporterAction = action;
-    }
+
+        
+}
 
     private List<PieceType> GetAdjacentPieces(int x, int y, int team)
     {
@@ -965,10 +982,12 @@ public class DjambiBoard : MonoBehaviour
     {
         NetUtility.S_WELCOME += OnWelcomeServer;
         NetUtility.S_MAKE_MOVE += OnMakeMoveServer;
+        NetUtility.S_MAKE_KILL += OnMakeKillServer;
 
         NetUtility.C_WELCOME += OnWelcomeClient;
         NetUtility.C_START_GAME += OnStartGameClient;
         NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
+        NetUtility.C_MAKE_KILL += OnMakeKillClient;
 
         GameUI.instance.SetLocalGame += OnSetLocalGame;
     }
@@ -979,10 +998,12 @@ public class DjambiBoard : MonoBehaviour
     {
         NetUtility.S_WELCOME -= OnWelcomeServer;
         NetUtility.S_MAKE_MOVE -= OnMakeMoveServer;
+        NetUtility.S_MAKE_KILL -= OnMakeKillServer;
 
         NetUtility.C_WELCOME -= OnWelcomeClient;
         NetUtility.C_START_GAME -= OnStartGameClient;
         NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
+        NetUtility.C_MAKE_KILL -= OnMakeKillClient;
 
         GameUI.instance.SetLocalGame -= OnSetLocalGame;
     }
@@ -995,16 +1016,17 @@ public class DjambiBoard : MonoBehaviour
 
         //Assign a team
         nw.AssignedTeam = ++playerCount;
+        nw.numberPlayer = playerCount;
 
         //Return bback to the client
         Server.Instance.SendToClient(connection, nw);
 
         //If we have 3 players, start the game
-        if(playerCount == 3)
+        /*if(playerCount == 3)
         {
             //Start the game
             Server.Instance.BroadCast(new NetStartGame());
-        }   
+        }*/   
     }
 
     private void OnMakeMoveServer(NetMessage message, NetworkConnection connection)
@@ -1015,6 +1037,14 @@ public class DjambiBoard : MonoBehaviour
        Server.Instance.BroadCast(message); 
     }
 
+    private void OnMakeKillServer(NetMessage message, NetworkConnection connection)
+    {
+        NetMakeKill nm = message as NetMakeKill;
+
+        //Receive, and just broadcast it to all clients 
+        Server.Instance.BroadCast(message); 
+    }
+
     //Client
 
     private void OnWelcomeClient(NetMessage message)
@@ -1022,6 +1052,8 @@ public class DjambiBoard : MonoBehaviour
         NetWelcome nw = message as NetWelcome;
 
         currentTeam = nw.AssignedTeam;
+        playerCount = nw.numberPlayer;
+
 
         Debug.Log("Welcome to the game, you are team " + currentTeam);
 
@@ -1033,6 +1065,7 @@ public class DjambiBoard : MonoBehaviour
 
     private void OnStartGameClient(NetMessage message)
     {
+        InitBoardUnit();
         if(currentTeam == 0 || currentTeam == 1)
         {
             GameUI.instance.ChangeCamera(cameraAngle.botSide);
@@ -1063,7 +1096,18 @@ public class DjambiBoard : MonoBehaviour
         {
             ChangeTurn();
         }
-        
+    }
+
+    public void OnMakeKillClient(NetMessage message)
+    {
+        NetMakeKill nm = message as NetMakeKill;
+
+        PieceType target = FindPieceById(nm.pieceId);
+        if(target != null)
+        {
+            target.Die();
+        }
+        ChangeTurn();
     }
 
     //Not Network

@@ -7,7 +7,8 @@ public enum OpCode{
     WELCOME = 2,
     START_GAME = 3,
     MAKE_MOVE = 4,
-    REMATCH = 5,
+    MAKE_KILL = 5,
+    REMATCH = 6,
 }
 
 public static class NetUtility
@@ -29,6 +30,9 @@ public static class NetUtility
                 break;
             case OpCode.MAKE_MOVE:
                 msg = new NetMakeMove(stream);
+                break;
+            case OpCode.MAKE_KILL:
+                msg = new NetMakeKill(stream);
                 break;
             /*case OpCode.REMATCH:
                 msg = new NetRematch(stream);
@@ -53,10 +57,12 @@ public static class NetUtility
     public static Action<NetMessage> C_WELCOME;
     public static Action<NetMessage> C_START_GAME;
     public static Action<NetMessage> C_MAKE_MOVE;
+    public static Action<NetMessage> C_MAKE_KILL;
     public static Action<NetMessage> C_REMATCH;
     public static Action<NetMessage, NetworkConnection> S_KEEP_ALIVE;
     public static Action<NetMessage, NetworkConnection> S_WELCOME;
     public static Action<NetMessage, NetworkConnection> S_START_GAME;
     public static Action<NetMessage, NetworkConnection> S_MAKE_MOVE;
+    public static Action<NetMessage, NetworkConnection> S_MAKE_KILL;
     public static Action<NetMessage, NetworkConnection> S_REMATCH;
 }

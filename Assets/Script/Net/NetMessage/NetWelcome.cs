@@ -4,6 +4,7 @@ using UnityEngine;
 public class NetWelcome : NetMessage
 {
     public int AssignedTeam{set;get;}
+    public int numberPlayer{set;get;}
 
     public NetWelcome() // <-- Making the box
     {
@@ -20,12 +21,14 @@ public class NetWelcome : NetMessage
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(AssignedTeam);
+        writer.WriteInt(numberPlayer);  
     }
 
     public override void Deserialize(ref DataStreamReader reader)
     {
         //We already read the byte in the NetUtility::OnData
         AssignedTeam = reader.ReadInt();
+        numberPlayer = reader.ReadInt();
     }
 
     public override void ReceivedOnClient()
