@@ -7,6 +7,8 @@ public class NetMakeMove : NetMessage
     public int destinationY;
     public int teamId;
 
+    public int anotherMoveAfter; //TODO voir pour finir ca 
+
     public int endTurn;
     public NetMakeMove() // <-- Making the box
     {
