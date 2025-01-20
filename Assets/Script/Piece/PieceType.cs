@@ -42,18 +42,12 @@ public abstract class PieceType : MonoBehaviour
 
     private void InitPieceType()
     {
-        
-
         if(team == 0)
         {
             gameObject.name = $"Red_{form}";
         } else if(team == 1)
         {
             gameObject.name = $"Blue_{form}";
-            if(form != PieceForm.Chef)
-            {
-                Die();
-            }
         } else if(team == 2)
         {
             gameObject.name = $"Green_{form}";

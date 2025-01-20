@@ -106,6 +106,13 @@ public class GameUI : MonoBehaviour
         //start game if 2 player 3 or 4 or 5 or 6 change game board
     }
 
+    public void OnLeaveFromGameMenu()
+    {
+        ChangeCamera(cameraAngle.menu);
+        menuAnimator.SetTrigger("StartMenu");
+        
+    }
+
      private void RegisterEvents()
     {
         NetUtility.C_START_GAME += OnStartGameClient; 

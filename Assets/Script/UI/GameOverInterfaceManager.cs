@@ -10,6 +10,7 @@ public class GameOverInterfaceManager : MonoBehaviour
     public GameObject gameOverInterface;
 
     public TextMeshProUGUI gameOverText;
+    public Transform rematchIndicator;
 
     private void Awake()
     {
@@ -19,6 +20,13 @@ public class GameOverInterfaceManager : MonoBehaviour
     void Start()
     {
         gameOverInterface.SetActive(false);
+        ResetGameOverPanel();
+    }
+
+    public void ResetGameOverPanel()
+    {
+        rematchIndicator.transform.GetChild(0).gameObject.SetActive(false);
+        rematchIndicator.transform.GetChild(1).gameObject.SetActive(false);
     }
 
 
@@ -46,11 +54,18 @@ public class GameOverInterfaceManager : MonoBehaviour
     public void OnRestartButton()
     {
         gameOverInterface.SetActive(false);
+        
         DjambiBoard.Instance.RestartGame();
     }
 
-    public void OnExitButton()
+    public void OnMenuButton()
     {
-        Application.Quit();
+        //DjambiBoard.Instance.BackMenu();
+    }
+
+
+    public void ActivateRematch(int value)
+    {
+        rematchIndicator.transform.GetChild(value).gameObject.SetActive(true);
     }
 }

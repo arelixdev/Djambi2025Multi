@@ -148,6 +148,7 @@ public class Necromobile : PieceType
     }
     public override void Action(PieceType target, Vector2Int initialPosition = default)
     {
+        Debug.Log("Necromobile Action");
         DjambiBoard.Instance.SetBoardPiece(initialPosition.x, initialPosition.y, null);
         DjambiBoard.Instance.SetMovePieceDragging(target);
     }

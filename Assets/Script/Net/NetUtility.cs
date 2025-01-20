@@ -34,9 +34,9 @@ public static class NetUtility
             case OpCode.MAKE_KILL:
                 msg = new NetMakeKill(stream);
                 break;
-            /*case OpCode.REMATCH:
+            case OpCode.REMATCH:
                 msg = new NetRematch(stream);
-                break;*/
+                break;
             default:
                 Debug.Log("Unknown OpCode: " + opCode);
                 break;
