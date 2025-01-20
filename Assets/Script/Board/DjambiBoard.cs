@@ -349,48 +349,48 @@ public class DjambiBoard : MonoBehaviour
 
         //Red team
         boardPieces[0, 0] = SpawnSinglePiece(PieceForm.Chef, redTeam);
-        /*boardPieces[1, 0] = SpawnSinglePiece(PieceForm.Assassin, redTeam);
+        boardPieces[1, 0] = SpawnSinglePiece(PieceForm.Assassin, redTeam);
         boardPieces[2, 0] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 1] = SpawnSinglePiece(PieceForm.Reporter, redTeam);
         boardPieces[1, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
         boardPieces[2, 1] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[1, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
-        boardPieces[2, 2] = SpawnSinglePiece(PieceForm.Necromobile, redTeam);*/
+        boardPieces[2, 2] = SpawnSinglePiece(PieceForm.Necromobile, redTeam);
 
 
         //Blue team
         boardPieces[8, 0] = SpawnSinglePiece(PieceForm.Chef, blueTeam);
         boardPieces[7, 0] = SpawnSinglePiece(PieceForm.Assassin, blueTeam);
-        //boardPieces[6, 0] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
+        boardPieces[6, 0] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[8, 1] = SpawnSinglePiece(PieceForm.Reporter, blueTeam);
-        /*boardPieces[7, 1] = SpawnSinglePiece(PieceForm.Diplomate, blueTeam);
+        boardPieces[7, 1] = SpawnSinglePiece(PieceForm.Diplomate, blueTeam);
         boardPieces[6, 1] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[8, 2] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[7, 2] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
-        boardPieces[6, 2] = SpawnSinglePiece(PieceForm.Necromobile, blueTeam);*/
+        boardPieces[6, 2] = SpawnSinglePiece(PieceForm.Necromobile, blueTeam);
 
         //Green team
         boardPieces[8, 8] = SpawnSinglePiece(PieceForm.Chef, greenTeam);
-        /*boardPieces[7, 8] = SpawnSinglePiece(PieceForm.Assassin, greenTeam);
+        boardPieces[7, 8] = SpawnSinglePiece(PieceForm.Assassin, greenTeam);
         boardPieces[6, 8] = SpawnSinglePiece(PieceForm.Militant, greenTeam); //TODO go back 6 8
         boardPieces[8, 7] = SpawnSinglePiece(PieceForm.Reporter, greenTeam);
         boardPieces[7, 7] = SpawnSinglePiece(PieceForm.Diplomate, greenTeam);
         boardPieces[6, 7] = SpawnSinglePiece(PieceForm.Militant, greenTeam);
         boardPieces[8, 6] = SpawnSinglePiece(PieceForm.Militant, greenTeam);
         boardPieces[7, 6] = SpawnSinglePiece(PieceForm.Militant, greenTeam);
-        boardPieces[6, 6] = SpawnSinglePiece(PieceForm.Necromobile, greenTeam);*/
+        boardPieces[6, 6] = SpawnSinglePiece(PieceForm.Necromobile, greenTeam);
 
         //Yellow team
         boardPieces[0, 8] = SpawnSinglePiece(PieceForm.Chef, yellowTeam);
-        /*boardPieces[1, 8] = SpawnSinglePiece(PieceForm.Assassin, yellowTeam);
+        boardPieces[1, 8] = SpawnSinglePiece(PieceForm.Assassin, yellowTeam);
         boardPieces[2, 8] = SpawnSinglePiece(PieceForm.Militant, yellowTeam);
         boardPieces[0, 7] = SpawnSinglePiece(PieceForm.Reporter, yellowTeam);
         boardPieces[1, 7] = SpawnSinglePiece(PieceForm.Diplomate, yellowTeam);
         boardPieces[2, 7] = SpawnSinglePiece(PieceForm.Militant, yellowTeam);
         boardPieces[0, 6] = SpawnSinglePiece(PieceForm.Militant, yellowTeam);
         boardPieces[1, 6] = SpawnSinglePiece(PieceForm.Militant, yellowTeam);
-        boardPieces[2, 6] = SpawnSinglePiece(PieceForm.Necromobile, yellowTeam);*/
+        boardPieces[2, 6] = SpawnSinglePiece(PieceForm.Necromobile, yellowTeam);
     }
 
     private PieceType SpawnSinglePiece(PieceForm type, int team){

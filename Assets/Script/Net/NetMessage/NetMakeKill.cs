@@ -8,19 +8,19 @@ public class NetMakeKill : NetMessage
         Code = OpCode.MAKE_KILL;
     }
 
-    public NetMakeKill(DataStreamReader reader) // <-- Receiving the box
+    public NetMakeKill(Unity.Collections.DataStreamReader reader) // <-- Receiving the box
     {
         Code = OpCode.MAKE_KILL;
         Deserialize(ref reader);
     }
 
-    public override void Serialize(ref DataStreamWriter writer)
+    public override void Serialize(ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(pieceId);
     }
 
-    public override void Deserialize(ref DataStreamReader reader)
+    public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         pieceId = reader.ReadInt();
     }

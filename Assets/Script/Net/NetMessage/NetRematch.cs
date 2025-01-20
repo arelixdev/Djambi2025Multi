@@ -10,20 +10,20 @@ public class NetRematch : NetMessage
         Code = OpCode.REMATCH;
     }
 
-    public NetRematch(DataStreamReader reader) // <-- Receiving the box
+    public NetRematch(Unity.Collections.DataStreamReader reader) // <-- Receiving the box
     {
         Code = OpCode.REMATCH;
         Deserialize(ref reader);
     }
 
-    public override void Serialize(ref DataStreamWriter writer)
+    public override void Serialize(ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(teamId);
         writer.WriteByte(wantRematch);
     }
 
-    public override void Deserialize(ref DataStreamReader reader)
+    public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         //We already read the byte in the NetUtility::OnData
         teamId = reader.ReadInt();

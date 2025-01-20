@@ -7,18 +7,18 @@ public class NetKeepAlive : NetMessage
         Code = OpCode.KEEP_ALIVE;
     }
 
-    public NetKeepAlive(DataStreamReader reader) // <-- Receiving the box
+    public NetKeepAlive(Unity.Collections.DataStreamReader reader) // <-- Receiving the box
     {
         Code = OpCode.KEEP_ALIVE;
         Deserialize(ref reader);
     }
 
-    public override void Serialize(ref DataStreamWriter writer)
+    public override void Serialize(ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
     }
 
-    public override void Deserialize(ref DataStreamReader reader)
+    public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         
     }

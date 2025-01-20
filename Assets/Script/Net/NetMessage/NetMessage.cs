@@ -6,12 +6,12 @@ public class NetMessage
 {
     public OpCode Code { get; set; }
 
-    public virtual void Serialize (ref DataStreamWriter writer)
+    public virtual void Serialize (ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
     }
 
-    public virtual void Deserialize (ref DataStreamReader reader)
+    public virtual void Deserialize (ref Unity.Collections.DataStreamReader reader)
     {
 
     }

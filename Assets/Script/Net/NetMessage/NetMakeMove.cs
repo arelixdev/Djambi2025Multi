@@ -15,13 +15,13 @@ public class NetMakeMove : NetMessage
         Code = OpCode.MAKE_MOVE;
     }
 
-    public NetMakeMove(DataStreamReader reader) // <-- Receiving the box
+    public NetMakeMove(Unity.Collections.DataStreamReader reader) // <-- Receiving the box
     {
         Code = OpCode.MAKE_MOVE;
         Deserialize(ref reader);
     }
 
-    public override void Serialize(ref DataStreamWriter writer)
+    public override void Serialize(ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(pieceId);
@@ -31,7 +31,7 @@ public class NetMakeMove : NetMessage
         writer.WriteInt(endTurn);
     }
 
-    public override void Deserialize(ref DataStreamReader reader)
+    public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         pieceId = reader.ReadInt();
         destinationX = reader.ReadInt();

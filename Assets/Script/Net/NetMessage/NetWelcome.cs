@@ -11,20 +11,20 @@ public class NetWelcome : NetMessage
         Code = OpCode.WELCOME;
     }
 
-    public NetWelcome(DataStreamReader reader) // <-- Receiving the box
+    public NetWelcome(Unity.Collections.DataStreamReader reader) // <-- Receiving the box
     {
         Code = OpCode.WELCOME;
         Deserialize(ref reader);
     }
 
-    public override void Serialize(ref DataStreamWriter writer)
+    public override void Serialize(ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(AssignedTeam);
         writer.WriteInt(numberPlayer);  
     }
 
-    public override void Deserialize(ref DataStreamReader reader)
+    public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         //We already read the byte in the NetUtility::OnData
         AssignedTeam = reader.ReadInt();

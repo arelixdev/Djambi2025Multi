@@ -23,7 +23,7 @@ public class Client : MonoBehaviour
     public void Init(string ip, ushort port)
     {
         driver = NetworkDriver.Create();
-        NetworkEndPoint endPoint = NetworkEndPoint.Parse(ip, port);
+        NetworkEndpoint endPoint = NetworkEndpoint.Parse(ip, port);
 
         connection = driver.Connect(endPoint);
 
@@ -70,7 +70,7 @@ public class Client : MonoBehaviour
 
     private void UpdateMessagePump()
     {
-        DataStreamReader stream;
+        Unity.Collections.DataStreamReader stream;
         NetworkEvent.Type cmd;
         while((cmd = connection.PopEvent(driver, out stream)) != NetworkEvent.Type.Empty)
         {
@@ -94,7 +94,7 @@ public class Client : MonoBehaviour
 
     public void SendToServer(NetMessage msg)
     {
-        DataStreamWriter writer;
+        Unity.Collections.DataStreamWriter writer;
         driver.BeginSend(connection, out writer);
         msg.Serialize(ref writer);
         driver.EndSend(writer);
