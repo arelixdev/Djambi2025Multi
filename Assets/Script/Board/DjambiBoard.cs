@@ -68,6 +68,11 @@ public class DjambiBoard : MonoBehaviour
         return playerCount;
     }
 
+    public GameObject GetTiles(int posX,int posY)
+    {
+        return tiles[posX, posY];
+    }
+
 
     private void Awake() {
         Instance = this;
@@ -373,7 +378,7 @@ public class DjambiBoard : MonoBehaviour
         //Green team
         boardPieces[8, 8] = SpawnSinglePiece(PieceForm.Chef, greenTeam);
         boardPieces[7, 8] = SpawnSinglePiece(PieceForm.Assassin, greenTeam);
-        boardPieces[6, 8] = SpawnSinglePiece(PieceForm.Militant, greenTeam); //TODO go back 6 8
+        boardPieces[6, 8] = SpawnSinglePiece(PieceForm.Militant, greenTeam);
         boardPieces[8, 7] = SpawnSinglePiece(PieceForm.Reporter, greenTeam);
         boardPieces[7, 7] = SpawnSinglePiece(PieceForm.Diplomate, greenTeam);
         boardPieces[6, 7] = SpawnSinglePiece(PieceForm.Militant, greenTeam);
@@ -392,7 +397,6 @@ public class DjambiBoard : MonoBehaviour
         boardPieces[1, 6] = SpawnSinglePiece(PieceForm.Militant, yellowTeam);
         boardPieces[2, 6] = SpawnSinglePiece(PieceForm.Necromobile, yellowTeam);
     }
-
     private PieceType SpawnSinglePiece(PieceForm type, int team){
         PieceType piece = Instantiate(prefabs[(int)type-1], transform).GetComponent<PieceType>();
 
@@ -700,6 +704,12 @@ public class DjambiBoard : MonoBehaviour
 
         PieceType cd = allUnits[pieceId];
         PieceType pieceType = boardPieces[x, y];
+
+        if(tiles[x, y].name.Contains("LabyTile") && cd.form != PieceForm.Chef && chefInLab == null)
+        {
+
+            return;
+        }
         
         Vector2Int previousPosition = new Vector2Int(cd.currentX, cd.currentY);
         if(boardPieces[x, y] != null)
@@ -711,6 +721,7 @@ public class DjambiBoard : MonoBehaviour
             }
             if(cd.team == pieceType.team && !pieceType.isDead)
             {
+                Debug.Log("Same team");
                 return;
             }
             if(pieceType.isDead && cd.form != PieceForm.Necromobile)
@@ -790,10 +801,15 @@ public class DjambiBoard : MonoBehaviour
         boardPieces[x, y] = cd;
 
         
-        if(!moveTo && !cd.isDead && cd.team == teamTurn)
+        if(!moveTo && !cd.isDead && cd.team == teamTurn && !notResetStart)
         {
             Debug.Log("Move to " + x + " " + y);
             boardPieces[previousPosition.x, previousPosition.y] = null;
+        }
+
+        if(notResetStart)
+        {
+            notResetStart = false;
         }
 
         PositionSinglePiece(x, y);
@@ -807,7 +823,7 @@ public class DjambiBoard : MonoBehaviour
         return;
     }
 
-
+    public bool notResetStart; 
     
 
     private void TeamSwitch(int teamChange, int teamTo)

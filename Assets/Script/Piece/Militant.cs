@@ -15,17 +15,22 @@ public class Militant : PieceType
             if (i < 0) // Limite du bord inférieur
                 break;
 
-            if(board[currentX, i ] == null)
+            if(DjambiBoard.Instance.GetTiles(currentX, i).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(currentX, i));
-            }
-            if(board[currentX, i] != null)
-            {
-                if(board[currentX, i].team != team || board[currentX, i].isDead)
+
+            } else {    
+                if(board[currentX, i ] == null)
                 {
                     r.Add(new Vector2Int(currentX, i));
                 }
-                break;
+                if(board[currentX, i] != null)
+                {
+                    if(board[currentX, i].team != team || board[currentX, i].isDead )
+                    {
+                        r.Add(new Vector2Int(currentX, i));
+                    }
+                    break;
+                }
             }
         }
 
@@ -35,18 +40,25 @@ public class Militant : PieceType
             if (i >= tileCountY) // Limite du bord supérieur
                 break;
 
-            if(board[currentX, i ] == null)
+            if(DjambiBoard.Instance.GetTiles(currentX, i).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(currentX, i));
-            }
-            if(board[currentX, i] != null)
-            {
-                if(board[currentX, i].team != team || board[currentX, i].isDead)
+
+            } else {
+                if(board[currentX, i ] == null)
                 {
                     r.Add(new Vector2Int(currentX, i));
                 }
-                break;
+                if(board[currentX, i] != null)
+                {
+                    if(board[currentX, i].team != team || board[currentX, i].isDead)
+                    {
+                        r.Add(new Vector2Int(currentX, i));
+                    }
+                    break;
+                }
             }
+
+            
         }
 
         //Left
@@ -54,17 +66,23 @@ public class Militant : PieceType
         {
             if(i < 0) // Limite du bord gauche
                 break;
-            if(board[i, currentY ] == null)
+
+            if(DjambiBoard.Instance.GetTiles(i, currentY).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(i, currentY));
-            }
-            if(board[i, currentY ] != null)
-            {
-                if(board[i, currentY ].team != team || board[i, currentY].isDead)
+
+            } else {
+                if(board[i, currentY ] == null)
                 {
                     r.Add(new Vector2Int(i, currentY));
                 }
-                break;
+                if(board[i, currentY ] != null)
+                {
+                    if(board[i, currentY ].team != team || board[i, currentY].isDead)
+                    {
+                        r.Add(new Vector2Int(i, currentY));
+                    }
+                    break;
+                }
             }
         }
 
@@ -73,17 +91,22 @@ public class Militant : PieceType
         {
             if(i >= tileCountX) // Limite du bord droit
                 break;
-            if(board[i, currentY ] == null)
+            if(DjambiBoard.Instance.GetTiles(i, currentY).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(i, currentY));
-            }
-            if(board[i, currentY ] != null)
-            {
-                if(board[i, currentY ].team != team || board[i, currentY].isDead)
+
+            } else {
+                if(board[i, currentY ] == null)
                 {
                     r.Add(new Vector2Int(i, currentY));
                 }
-                break;
+                if(board[i, currentY ] != null)
+                {
+                    if(board[i, currentY ].team != team || board[i, currentY].isDead)
+                    {
+                        r.Add(new Vector2Int(i, currentY));
+                    }
+                    break;
+                }
             }
         }
 
@@ -92,17 +115,21 @@ public class Militant : PieceType
         {
             if (y >= tileCountY || x >= tileCountX) // Limite du bord supérieur
                 break;
-
-            if(board[x, y] == null)
+            if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(x, y));
-            }
-            else {
-                if(board[x, y].team != team || board[x, y].isDead)
+
+            } else {
+                if(board[x, y] == null)
                 {
                     r.Add(new Vector2Int(x, y));
                 }
-                break;
+                else {
+                    if(board[x, y].team != team || board[x, y].isDead)
+                    {
+                        r.Add(new Vector2Int(x, y));
+                    }
+                    break;
+                }
             }
         }
         
@@ -111,16 +138,21 @@ public class Militant : PieceType
         {
             if(x < 0 || y >= tileCountY) // Limite du bord supérieur
                 break;
-            if(board[x, y] == null)
+            if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(x, y));
-            }
-            else {
-                if(board[x, y].team != team || board[x, y].isDead)
+
+            } else {
+                if(board[x, y] == null)
                 {
                     r.Add(new Vector2Int(x, y));
                 }
-                break;
+                else {
+                    if(board[x, y].team != team || board[x, y].isDead)
+                    {
+                        r.Add(new Vector2Int(x, y));
+                    }
+                    break;
+                }
             }
         }
 
@@ -129,16 +161,21 @@ public class Militant : PieceType
         {
             if(y < 0 || x >= tileCountX) // Limite du bord supérieur
                 break;
-            if(board[x, y] == null)
+            if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(x, y));
-            }
-            else {
-                if(board[x, y].team != team || board[x, y].isDead)
+
+            } else {
+                if(board[x, y] == null)
                 {
                     r.Add(new Vector2Int(x, y));
                 }
-                break;
+                else {
+                    if(board[x, y].team != team || board[x, y].isDead)
+                    {
+                        r.Add(new Vector2Int(x, y));
+                    }
+                    break;
+                }
             }
         }
 
@@ -147,16 +184,21 @@ public class Militant : PieceType
         {
             if(x < 0 || y < 0)
                 break;
-            if(board[x, y] == null)
+            if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-                r.Add(new Vector2Int(x, y));
-            }
-            else {
-                if(board[x, y].team != team || board[x, y].isDead)
+
+            } else {
+                if(board[x, y] == null)
                 {
                     r.Add(new Vector2Int(x, y));
                 }
-                break;
+                else {
+                    if(board[x, y].team != team || board[x, y].isDead)
+                    {
+                        r.Add(new Vector2Int(x, y));
+                    }
+                    break;
+                }
             }
         }
         

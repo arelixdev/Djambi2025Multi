@@ -2743,7 +2743,7 @@ MonoBehaviour:
   prefabs:
   - {fileID: 8317271998744421279, guid: bac4e21be638aa84090653b3d36bc2e6, type: 3}
   - {fileID: 4798814321394274665, guid: 3c4062d5bdbd2384698e0f00da7e84be, type: 3}
-  - {fileID: 2574389878655750882, guid: b16df53b600da7147a63d47836342bf9, type: 3}
+  - {fileID: 6867289289876826471, guid: b16df53b600da7147a63d47836342bf9, type: 3}
   - {fileID: 7124257391289196611, guid: 6d5805960adb162418a1108881de9d74, type: 3}
   - {fileID: 1044100723607864296, guid: c5df6949db2bf9948becad1cc92093ac, type: 3}
   - {fileID: 132498780242635706, guid: d8629bc373389174695eb81697cebc98, type: 3}
@@ -2756,6 +2756,7 @@ MonoBehaviour:
   chefTurn: 0
   chefEncercled: 
   movePieceAgain: {fileID: 0}
+  notResetStart: 0
 --- !u!4 &1298903463
 Transform:
   m_ObjectHideFlags: 0
