@@ -28,6 +28,21 @@ public class TurnInterfaceManager : MonoBehaviour
         }
     }
 
+    public void SetYourColor(int teamColor)
+    {
+        for (int i = 0; i < turnElements.Count; i++)
+        {
+            if (i == teamColor)
+            {
+                turnElements[i].SetYourColor(true);
+            }
+            else
+            {
+                turnElements[i].SetYourColor(false);
+            }
+        }
+    }
+
     public void ActivateChef(int teamTurn)
     {
         for (int i = 0; i < turnElements.Count; i++)

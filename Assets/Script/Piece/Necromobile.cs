@@ -14,7 +14,10 @@ public class Necromobile : PieceType
 
             if(DjambiBoard.Instance.GetTiles(currentX, i).gameObject.name.Contains("Laby"))
             {
-
+                if(board[currentX, i] != null && board[currentX, i].isDead)
+                {
+                    r.Add(new Vector2Int(currentX, i));
+                }
             } else {    
                 if(board[currentX, i ] == null)
                 {
@@ -37,7 +40,10 @@ public class Necromobile : PieceType
 
             if(DjambiBoard.Instance.GetTiles(currentX, i).gameObject.name.Contains("Laby"))
             {
-
+                if(board[currentX, i] != null && board[currentX, i].isDead)
+                {
+                    r.Add(new Vector2Int(currentX, i));
+                }
             } else {    
                 if(board[currentX, i ] == null)
                 {
@@ -59,7 +65,10 @@ public class Necromobile : PieceType
         {
             if(DjambiBoard.Instance.GetTiles(i, currentY).gameObject.name.Contains("Laby"))
             {
-
+                if(board[i, currentY] != null && board[i, currentY].isDead)
+                {
+                    r.Add(new Vector2Int(i, currentY));
+                }
             } else {
                 if(board[i, currentY ] == null)
                 {
@@ -81,7 +90,10 @@ public class Necromobile : PieceType
         {
             if(DjambiBoard.Instance.GetTiles(i, currentY).gameObject.name.Contains("Laby"))
             {
-
+                if(board[i, currentY] != null && board[i, currentY].isDead)
+                {
+                    r.Add(new Vector2Int(i, currentY));
+                }
             } else {
                 if(board[i, currentY ] == null)
                 {
@@ -103,7 +115,10 @@ public class Necromobile : PieceType
         {
             if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-
+                if(board[x,y] != null && board[x,y].isDead)
+                {
+                    r.Add(new Vector2Int(x, y));
+                }
             } else {
                 if(board[x, y] == null)
                 {
@@ -124,7 +139,10 @@ public class Necromobile : PieceType
         {
             if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-
+                if(board[x,y] != null && board[x,y].isDead)
+                {
+                    r.Add(new Vector2Int(x, y));
+                }
             } else {
                 if(board[x, y] == null)
                 {
@@ -145,7 +163,10 @@ public class Necromobile : PieceType
         {
             if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-
+                if(board[x,y] != null && board[x,y].isDead)
+                {
+                    r.Add(new Vector2Int(x, y));
+                }
             } else {
                 if(board[x, y] == null)
                 {
@@ -168,7 +189,10 @@ public class Necromobile : PieceType
                 break;
             if(DjambiBoard.Instance.GetTiles(x, y).gameObject.name.Contains("Laby"))
             {
-
+                if(board[x,y] != null && board[x,y].isDead)
+                {
+                    r.Add(new Vector2Int(x, y));
+                }
             } else {
                 if(board[x, y] == null)
                 {
