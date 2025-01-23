@@ -3,6 +3,7 @@ using Unity.Networking.Transport;
 public class NetMakeKill : NetMessage
 {
     public int pieceId;
+    public int teamSwap;
     public NetMakeKill() // <-- Making the box
     {
         Code = OpCode.MAKE_KILL;
@@ -18,11 +19,13 @@ public class NetMakeKill : NetMessage
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(pieceId);
+        writer.WriteInt(teamSwap);
     }
 
     public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         pieceId = reader.ReadInt();
+        teamSwap = reader.ReadInt();
     }
 
     public override void ReceivedOnClient()
