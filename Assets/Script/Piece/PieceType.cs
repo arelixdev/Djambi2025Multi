@@ -48,7 +48,6 @@ public abstract class PieceType : MonoBehaviour
         } else if(team == 1)
         {
             gameObject.name = $"Blue_{form}";
-            Die();
         } else if(team == 2)
         {
             gameObject.name = $"Green_{form}";

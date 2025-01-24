@@ -213,6 +213,11 @@ public class DjambiBoard : MonoBehaviour
                 {
                     Vector2Int previousPosition = new Vector2Int(movePieceDragging.currentX, movePieceDragging.currentY);
 
+                    if(tiles[hitPosition.x, hitPosition.y].name.Contains("LabyTile") || boardPieces[hitPosition.x, hitPosition.y] != null)
+                    {
+                        return;
+                    }
+
                     MoveTo(movePieceDragging.pieceId, hitPosition.x, hitPosition.y, true);
 
                     //Net Implementation
@@ -357,10 +362,10 @@ public class DjambiBoard : MonoBehaviour
         //Red team
         boardPieces[0, 0] = SpawnSinglePiece(PieceForm.Chef, redTeam); 
         boardPieces[1, 0] = SpawnSinglePiece(PieceForm.Assassin, redTeam);
-        //boardPieces[2, 0] = SpawnSinglePiece(PieceForm.Militant, redTeam);
-        boardPieces[2, 1] = SpawnSinglePiece(PieceForm.Reporter, redTeam);
-        boardPieces[1, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
-        //boardPieces[2, 1] = SpawnSinglePiece(PieceForm.Militant, redTeam);
+        boardPieces[5, 0] = SpawnSinglePiece(PieceForm.Militant, redTeam);
+        boardPieces[0, 1] = SpawnSinglePiece(PieceForm.Reporter, redTeam);
+        boardPieces[3, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
+        boardPieces[2, 1] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[1, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[2, 2] = SpawnSinglePiece(PieceForm.Necromobile, redTeam);
@@ -369,7 +374,7 @@ public class DjambiBoard : MonoBehaviour
         //Blue team
         boardPieces[8, 0] = SpawnSinglePiece(PieceForm.Chef, blueTeam);
         boardPieces[7, 0] = SpawnSinglePiece(PieceForm.Assassin, blueTeam);
-        boardPieces[3, 0] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
+        boardPieces[6, 0] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[8, 1] = SpawnSinglePiece(PieceForm.Reporter, blueTeam); 
         boardPieces[7, 1] = SpawnSinglePiece(PieceForm.Diplomate, blueTeam);
         boardPieces[6, 1] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
@@ -775,6 +780,7 @@ public class DjambiBoard : MonoBehaviour
         if(chefInLab != null && cd == chefInLab.GetComponent<PieceType>())
         {
             chefInLab = null;
+            boardPieces[previousPosition.x, previousPosition.y] = null;
             teamTurn =  keepTeamWithoutChef;
             TurnInterfaceManager.instance.DesactivateChef(cd.team);
         }
