@@ -53,6 +53,7 @@ public abstract class PieceType : MonoBehaviour
             gameObject.name = $"Green_{form}";
             transform.rotation = Quaternion.Euler(0, 180, 0); // Rotation de 180° sur l'axe Y
             
+            
         } else if(team == 3)
         {
             gameObject.name = $"Yellow_{form}";

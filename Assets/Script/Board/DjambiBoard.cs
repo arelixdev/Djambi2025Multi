@@ -185,7 +185,7 @@ public class DjambiBoard : MonoBehaviour
                     nm.destinationX = hitPosition.x;
                     nm.destinationY = hitPosition.y;
                     nm.teamId = currentTeam;
-                    if(movePieceDragging == null && !reporterAction)
+                    if(movePieceDragging == null && !reporterAction )
                     {
                         nm.endTurn = 1;
                     } else 
@@ -245,11 +245,14 @@ public class DjambiBoard : MonoBehaviour
                     nm.teamSwap = reporterPiece.team;
 
                     Client.Instance.SendToServer(nm);
-                    /*if(boardPieces[hitPosition.x, hitPosition.y].form == PieceForm.Chef)
+                    if(boardPieces[hitPosition.x, hitPosition.y].form == PieceForm.Chef && tiles[hitPosition.x, hitPosition.y].name.Contains("LabyTile"))
                     {
                         //All EnemyUnits switch to your team 
-                        TeamSwitch(boardPieces[hitPosition.x, hitPosition.y].team, reporterPiece.team);
-                    }*/
+                        TurnInterfaceManager.instance.DesactivateChef(chefInLab.GetComponent<PieceType>().team);
+                        chefInLab = null;
+                        
+                    }
+
                     reporterTargets.Clear();
                     reporterPiece = null;
                     //ChangeTurn();
@@ -360,11 +363,11 @@ public class DjambiBoard : MonoBehaviour
         int redTeam = 0, blueTeam = 1, greenTeam = 2, yellowTeam = 3;
 
         //Red team
-        boardPieces[0, 0] = SpawnSinglePiece(PieceForm.Chef, redTeam); 
+        boardPieces[0, 0] = SpawnSinglePiece(PieceForm.Chef, redTeam);
         boardPieces[1, 0] = SpawnSinglePiece(PieceForm.Assassin, redTeam);
-        boardPieces[5, 0] = SpawnSinglePiece(PieceForm.Militant, redTeam);
+        boardPieces[2, 0] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 1] = SpawnSinglePiece(PieceForm.Reporter, redTeam);
-        boardPieces[3, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
+        boardPieces[1, 1] = SpawnSinglePiece(PieceForm.Diplomate, redTeam);
         boardPieces[2, 1] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[0, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
         boardPieces[1, 2] = SpawnSinglePiece(PieceForm.Militant, redTeam);
@@ -375,7 +378,7 @@ public class DjambiBoard : MonoBehaviour
         boardPieces[8, 0] = SpawnSinglePiece(PieceForm.Chef, blueTeam);
         boardPieces[7, 0] = SpawnSinglePiece(PieceForm.Assassin, blueTeam);
         boardPieces[6, 0] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
-        boardPieces[8, 1] = SpawnSinglePiece(PieceForm.Reporter, blueTeam); 
+        boardPieces[8, 1] = SpawnSinglePiece(PieceForm.Reporter, blueTeam);
         boardPieces[7, 1] = SpawnSinglePiece(PieceForm.Diplomate, blueTeam);
         boardPieces[6, 1] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
         boardPieces[8, 2] = SpawnSinglePiece(PieceForm.Militant, blueTeam);
@@ -718,27 +721,27 @@ public class DjambiBoard : MonoBehaviour
             //Piece Type = piece on To && cd = piece Start
             if(pieceType != null && movePieceDragging != null)
             {
+                Debug.Log("1");
                 return;
             }
             if(cd.team == pieceType.team && !pieceType.isDead)
             {
-                Debug.Log("Same team");
+                Debug.Log("2");
                 return;
             }
             if(pieceType.isDead && cd.form != PieceForm.Necromobile)
             {
+                Debug.Log("3");
                 return;
             }
             if(cd.form == PieceForm.Reporter)
             {
+                Debug.Log("4");
                 return;
             }
             if(!pieceType.isDead && cd.form == PieceForm.Necromobile)
             {
-                return;
-            }
-            if(tiles[x, y].name.Contains("LabyTile") && cd.form != PieceForm.Chef && chefInLab == null)
-            {
+                Debug.Log("5");
                 return;
             }
             
@@ -764,11 +767,14 @@ public class DjambiBoard : MonoBehaviour
             }
             else if(cd.form == PieceForm.Necromobile && teamTurn == cd.team)
             {
+                Debug.Log("Necro Move");
                 if(pieceType.isDead && currentTeam == teamTurn)
                 {
-                    if(chefInLab != null && cd.form != PieceForm.Chef &&  pieceType == chefInLab.GetComponent<PieceType>())
+                    
+                    if(chefInLab == null && cd.form != PieceForm.Chef)
                     {
                         movePieceAgain = cd;
+                        Debug.Log("MovePieceAgain" + movePieceAgain);
                     }
                     cd.Action(pieceType, previousPosition);
                 }
@@ -785,7 +791,7 @@ public class DjambiBoard : MonoBehaviour
             TurnInterfaceManager.instance.DesactivateChef(cd.team);
         }
 
-        if(tiles[x, y].name.Contains("LabyTile") && cd.form != PieceForm.Chef && chefInLab == null)
+        if(tiles[x, y].name.Contains("LabyTile") && cd.form != PieceForm.Chef && chefInLab == null && cd.form != PieceForm.Necromobile && !pieceType.isDead)
         {
             return;
         }
@@ -894,6 +900,7 @@ public class DjambiBoard : MonoBehaviour
 
     public void SetBoardPiece(int x, int y, PieceType piece)
     {
+        Debug.Log("SetBoardPiece" + x + " " + y + " " + piece);
         boardPieces[x, y] = piece;
         if(piece != null)
         {
@@ -906,9 +913,12 @@ public class DjambiBoard : MonoBehaviour
     {
         if(currentTeam == teamTurn && movePieceDragging == null)
         {
+            Debug.Log("SetMovePieceDragging");
             movePieceDragging = pieceType;
             movePieceDragging.GetComponent<BoxCollider>().enabled = false;
         }
+
+
     }
 
     private int reporterTeam;
