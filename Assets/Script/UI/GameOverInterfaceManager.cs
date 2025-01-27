@@ -60,6 +60,9 @@ public class GameOverInterfaceManager : MonoBehaviour
 
     public void OnMenuButton()
     {
+        gameOverInterface.SetActive(false);
+
+
         DjambiBoard.Instance.BackMenu();
     }
 
