@@ -2,11 +2,6 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using System.Net;
-using System.Net.Sockets;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Networking;
 
 public enum cameraAngle{
     menu = 0,
@@ -16,16 +11,31 @@ public enum cameraAngle{
 
 public class GameUI : MonoBehaviour
 {
+    private const string ANIMATOR_TRIGGER_WAITINNG_ROOM = "HostMenu"; //TODO change to waiting room
     public static GameUI instance { get; private set; }
 
+    [Header("Net")]
     public Server server;
     public Client client;
 
+    [Header("Setup")]
     [SerializeField] private Animator menuAnimator;
-    [SerializeField] private TMP_InputField playerNameInputfield; //TODO change to pseudo 
+    [SerializeField] private GameObject[] cameraAngles;
+
+    [Header("Online Menu")]
+    [SerializeField] private TMP_InputField playerNameInputfield;
+
+    [Header("Create Menu")]
+    [SerializeField] private GameObject createRoomPanel;
+    [SerializeField] private TMP_InputField gameNameInput;
+    [SerializeField] private Toggle privateGameToggle;
+
+    [Header("Waiting Menu")]
     [SerializeField] private TMP_Text numberPlayerWaitingGame;
     [SerializeField] private Button startButton;
-    [SerializeField] private GameObject[] cameraAngles;
+    
+
+    
 
     public Action<bool> SetLocalGame;
 
@@ -37,6 +47,8 @@ public class GameUI : MonoBehaviour
 
     void Start()
     {
+        createRoomPanel.SetActive(false);
+
         playerNameInputfield.text = PlayerManager.Instance.GetPlayerName();
         playerNameInputfield.onValueChanged.AddListener((string newText) => {
             PlayerManager.Instance.SetPlayerName(newText);
@@ -69,6 +81,8 @@ public class GameUI : MonoBehaviour
         client.Init("127.0.0.1", 8007);
     }
 
+    #region OnlineMenu
+
     public void OnOnlineButton()
     {
         menuAnimator.SetTrigger("OnlineMenu");
@@ -77,10 +91,15 @@ public class GameUI : MonoBehaviour
     public void OnOnlineHostButton()
     {
         SetLocalGame?.Invoke(false);
-        
-        server.Init(8007);
-        client.Init("82.66.188.111", 8007);
-        menuAnimator.SetTrigger("HostMenu");
+
+        //server.Init(8007);
+        //client.Init("IP RANDOM", 8007);
+
+        if(PlayerManager.Instance.GetPlayerName() == "")
+        {
+            return;
+        }
+        createRoomPanel.SetActive(true);
     }
 
     public void OnOnlineConnectButton()
@@ -96,6 +115,30 @@ public class GameUI : MonoBehaviour
     {
         menuAnimator.SetTrigger("StartMenu");
     }
+        
+    #endregion
+
+    #region CreateRoomMenu
+        public void OnCreateRoomCloseButton()
+        {
+            createRoomPanel.SetActive(false);
+        }
+
+        public void OnCreateRoomCreateButton()
+        {
+            //TODO Launch server and client create room
+            if(gameNameInput.text == "")
+            {
+                return;
+            }
+            Debug.Log("Create Room" + gameNameInput.text + " _ " + privateGameToggle.isOn);
+            menuAnimator.SetTrigger(ANIMATOR_TRIGGER_WAITINNG_ROOM);
+            PlayerManager.Instance.CreateRoom();
+            createRoomPanel.SetActive(false);
+        }
+    #endregion
+
+    
 
     public void OnHostBackButton()
     {

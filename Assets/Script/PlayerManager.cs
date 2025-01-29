@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -25,5 +26,51 @@ public class PlayerManager : MonoBehaviour
     {
         playerName = name;
         PlayerPrefs.SetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, name);
+    }
+
+    public void CreateRoom()
+    {
+        NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
+        NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
+        NetworkManager.Singleton.StartHost();
+    }
+
+    private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
+    {
+        /*for(int i=0; i < playerDataNetworkList.Count; i++){
+            PlayerData playerData = playerDataNetworkList[i];
+            if(playerData.clientId == clientId){
+                playerDataNetworkList.RemoveAt(i);
+            }
+        }*/
+    }
+
+    private void NetworkManager_OnClientConnectedCallback(ulong clientId)
+    {
+        /*playerDataNetworkList.Add(new PlayerData{
+            clientId = clientId,
+            colorId =  GetFirstUnusedColorId()
+        });
+
+        SetPlayerNameServerRpc(GetPlayerName());
+        SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);*/
+    }
+
+    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
+    {
+        /*if(SceneManager.GetActiveScene().name != Loader.Scene.CharacterSelectScene.ToString()){
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "Game is already in progress";
+            return;
+        }
+
+        if(NetworkManager.Singleton.ConnectedClientsList.Count >= MAX_PLAYER_AMOUNT){
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "Game is full";
+            return;
+        }
+
+        connectionApprovalResponse.Approved = true;*/
     }
 }
