@@ -22,7 +22,7 @@ public class GameUI : MonoBehaviour
     public Client client;
 
     [SerializeField] private Animator menuAnimator;
-    [SerializeField] private TMP_InputField addressInput;
+    [SerializeField] private TMP_InputField playerNameInputfield; //TODO change to pseudo 
     [SerializeField] private TMP_Text numberPlayerWaitingGame;
     [SerializeField] private Button startButton;
     [SerializeField] private GameObject[] cameraAngles;
@@ -33,6 +33,14 @@ public class GameUI : MonoBehaviour
     {
         instance = this;
         RegisterEvents();
+    }
+
+    void Start()
+    {
+        playerNameInputfield.text = PlayerManager.Instance.GetPlayerName();
+        playerNameInputfield.onValueChanged.AddListener((string newText) => {
+            PlayerManager.Instance.SetPlayerName(newText);
+        });
     }
 
     //Cameras
@@ -79,7 +87,7 @@ public class GameUI : MonoBehaviour
     {
         SetLocalGame?.Invoke(false);
         
-        client.Init(addressInput.text, 8007);
+        //client.Init(addressInput.text, 8007);
         startButton.gameObject.SetActive(false);
         menuAnimator.SetTrigger("HostMenu");
     }
