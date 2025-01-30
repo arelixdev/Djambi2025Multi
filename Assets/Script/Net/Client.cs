@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Unity.Collections;
 using Unity.Networking.Transport;
 using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
@@ -60,6 +61,33 @@ public class Client : MonoBehaviour
         settings.WithRelayParameters(ref relayServerData);
         
         driver = NetworkDriver.Create(settings);
+
+        // Bind to the Relay server.
+        if (driver.Bind(NetworkEndpoint.AnyIpv4) != 0)
+        {
+            Debug.LogError("Player client failed to bind");
+        }
+        else
+        {
+            Debug.Log("Player client bound to Relay server");
+        }
+
+        Debug.Log("Player - Connecting to Host's client.");
+
+        // Sends a connection request to the Host Player.
+        connection = driver.Connect();
+
+        if (!connection.IsCreated)
+        {
+            Debug.LogError("La connexion client n'a pas été créée !");
+        }
+        else
+        {
+            Debug.Log("La connexion client a bien été envoyée !");
+        }
+
+        isActive = true;
+
         /*NetworkEndpoint endPoint = NetworkEndpoint.Parse(ip, port);
 
         connection = driver.Connect(endPoint);
@@ -92,13 +120,13 @@ public class Client : MonoBehaviour
     }
     public void Shutdown()
     {
-        if(isActive)
+        /*if(isActive)
         {
             //UnregisterToEvent();
             driver.Dispose();
             isActive = false;
             connection = default(NetworkConnection);
-        }
+        }*/
     }
 
     public void OnDestroy() {
@@ -106,14 +134,48 @@ public class Client : MonoBehaviour
     }
 
     public void Update(){
-        if(!isActive)
+        /*if(!isActive)
             return;
 
         driver.ScheduleUpdate().Complete();
         CheckAlive();
 
-        UpdateMessagePump();
+        UpdateMessagePump();*/
+        // Skip update logic if the Player is not yet bound.
+        if (!driver.IsCreated)
+        {
+            return;
+        }
 
+        // This keeps the binding to the Relay server alive,
+        // preventing it from timing out due to inactivity.
+        driver.ScheduleUpdate().Complete();
+
+        // Resolve event queue.
+        NetworkEvent.Type eventType;
+        while ((eventType = connection.PopEvent(driver, out var stream)) != NetworkEvent.Type.Empty)
+        {
+            switch (eventType)
+            {
+                // Handle Relay events.
+                case NetworkEvent.Type.Data:
+                    FixedString32Bytes msg = stream.ReadFixedString32();
+                    Debug.Log($"Player received msg: {msg}");
+                    //playerLatestMessageReceived = msg.ToString();
+                    break;
+
+                // Handle Connect events.
+                case NetworkEvent.Type.Connect:
+                    Debug.Log("Player connected to the Host");
+                    break;
+
+                // Handle Disconnect events.
+                case NetworkEvent.Type.Disconnect:
+                    Debug.Log("Player got disconnected from the Host");
+                    connection = default(NetworkConnection);
+                    break;
+            }
+        }
     }
     private void CheckAlive()
     {

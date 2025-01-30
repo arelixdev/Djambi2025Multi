@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using UnityEngine.Assertions;
 
 public class Server : MonoBehaviour
 {
@@ -55,6 +56,16 @@ public class Server : MonoBehaviour
         return joinCode;
     }
 
+    public Allocation GetHostAllocation()
+    {
+        return hostAllocation;
+    }
+
+    public int GetNumberPlayerMax()
+    {
+        return connections.Length;
+    }
+
     public async Task Init(int numberPlayerMax)
     {
         await InitializeUnityServices();
@@ -71,6 +82,25 @@ public class Server : MonoBehaviour
         settings.WithRelayParameters(ref relayServerData);
         
         driver = NetworkDriver.Create(settings);
+
+        var endpoint = NetworkEndpoint.AnyIpv4;
+        if (driver.Bind(endpoint) != 0)
+        {
+            Debug.LogError("Le serveur n'a pas pu être bind !");
+        }
+        else
+        {
+            Debug.Log("Le serveur est bind et écoute !");
+        }
+
+        if (driver.Listen() != 0)
+        {
+            Debug.LogError("Le serveur n'a pas pu écouter !");
+        }
+        else
+        {
+            Debug.Log("Le serveur écoute !");
+        }
         connections = new NativeList<NetworkConnection>(numberPlayerMax, Allocator.Persistent); 
 
         Debug.Log("Host - Getting a join code for my allocation. I would share that join code with the other players so they can join my session.");
@@ -84,6 +114,10 @@ public class Server : MonoBehaviour
         {
             Debug.LogError(ex.Message + "\n" + ex.StackTrace);
         }
+
+        isActive = true;
+
+
         /*NetworkEndpoint endPoint = NetworkEndpoint.AnyIpv4;
         endPoint.Port = port;
 
@@ -123,12 +157,12 @@ public class Server : MonoBehaviour
     }
     public void Shutdown()
     {
-        if(isActive)
+        /*if(isActive)
         {
             driver.Dispose();
             connections.Dispose();
             isActive = false;
-        }
+        }*/
     }
 
     public void OnDestroy() {
@@ -136,7 +170,7 @@ public class Server : MonoBehaviour
     }
 
     public void Update(){
-        if(!isActive)
+        /*if(!isActive)
             return;
 
         KeepAlive();
@@ -145,7 +179,79 @@ public class Server : MonoBehaviour
 
         CleanupConnections();
         AcceptNewConnections();
-        UpdateMessagePump();
+        UpdateMessagePump();*/
+
+         // Skip update logic if the Host is not yet bound.
+        if (!driver.IsCreated)
+        {
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Sending message to all clients" + connections.Length);
+        }
+
+        // This keeps the binding to the Relay server alive,
+        // preventing it from timing out due to inactivity.
+        driver.ScheduleUpdate().Complete();
+
+        // Clean up stale connections.
+        for (int i = 0; i < connections.Length; i++)
+        {
+            if (!connections[i].IsCreated)
+            {
+                Debug.Log("Stale connection removed");
+                connections.RemoveAt(i);
+                --i;
+            }
+        }
+
+        // Accept incoming client connections.
+        NetworkConnection incomingConnection;
+        while ((incomingConnection = driver.Accept()) != default(NetworkConnection))
+        {
+            // Adds the requesting Player to the serverConnections list.
+            // This also sends a Connect event back the requesting Player,
+            // as a means of acknowledging acceptance.
+            Debug.Log($"Tentative de connexion détectée : {incomingConnection}");
+            if (!incomingConnection.IsCreated)
+            {
+                Debug.LogError("La connexion entrante n'a pas été créée correctement !");
+            }
+            Debug.Log("Accepted an incoming connection.");
+            connections.Add(incomingConnection);
+        }
+
+        // Process events from all connections.
+        for (int i = 0; i < connections.Length; i++)
+        {
+            Assert.IsTrue(connections[i].IsCreated);
+
+            // Resolve event queue.
+            NetworkEvent.Type eventType;
+            while ((eventType = driver.PopEventForConnection(connections[i], out var stream)) != NetworkEvent.Type.Empty)
+            {
+                switch (eventType)
+                {
+                    case NetworkEvent.Type.Connect:
+                        Debug.Log("Client successfully connected to the host!");
+                        break;
+                    // Handle Relay events.
+                    case NetworkEvent.Type.Data:
+                        FixedString32Bytes msg = stream.ReadFixedString32();
+                        Debug.Log($"Server received msg: {msg}");
+                        //hostLatestMessageReceived = msg.ToString();
+                        break;
+
+                    // Handle Disconnect events.
+                    case NetworkEvent.Type.Disconnect:
+                        Debug.Log("Server received disconnect from client");
+                        connections[i] = default(NetworkConnection);
+                        break;
+                }
+            }
+        }
 
     }
 
@@ -163,6 +269,7 @@ public class Server : MonoBehaviour
         {
             if(!connections[i].IsCreated)
             {
+                Debug.Log("Client disconnected from server BIP BOOP");
                 connections.RemoveAtSwapBack(i);
                 --i;
             }
@@ -170,12 +277,15 @@ public class Server : MonoBehaviour
     }
     private void AcceptNewConnections()
     {
-        NetworkConnection c;
-        while((c = driver.Accept()) != default(NetworkConnection))
+        NetworkConnection incomingConnection;
+        while ((incomingConnection = driver.Accept()) != default(NetworkConnection))
         {
-            connections.Add(c);
-            Debug.Log("Accepted a connection");
-        }
+            // Adds the requesting Player to the serverConnections list.
+            // This also sends a Connect event back the requesting Player,
+            // as a means of acknowledging acceptance.
+            Debug.Log("Accepted an incoming connection.");
+            connections.Add(incomingConnection);
+        } 
     }
     private void UpdateMessagePump()
     {
@@ -194,7 +304,7 @@ public class Server : MonoBehaviour
                     Debug.Log("Client disconnected from server");
                     connections[i] = default(NetworkConnection);
                     connectionDropped?.Invoke();
-                    //Shutdown();
+                    Shutdown();
                 }
             }
         }

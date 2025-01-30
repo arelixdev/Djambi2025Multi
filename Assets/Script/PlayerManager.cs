@@ -36,47 +36,18 @@ public class PlayerManager : MonoBehaviour
     public async void CreateRoom()
     {
         Debug.Log("Create Room" + GameUI.instance.GetNumberPlayerValue());
+    
         await Server.Instance.Init(GameUI.instance.GetNumberPlayerValue());
-        await Task.Delay(100);
+
+        // Attendre que le join code soit valide avant de démarrer le client
+        while (string.IsNullOrEmpty(Server.Instance.GetJoinCode()))
+        {
+            await Task.Delay(100);
+        }
+
+        Debug.Log("Join Code obtained: " + Server.Instance.GetJoinCode());
+
         Client.Instance.Init(Server.Instance.GetJoinCode());
-    }
-
-    private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
-    {
-        /*for(int i=0; i < playerDataNetworkList.Count; i++){
-            PlayerData playerData = playerDataNetworkList[i];
-            if(playerData.clientId == clientId){
-                playerDataNetworkList.RemoveAt(i);
-            }
-        }*/
-    }
-
-    private void NetworkManager_OnClientConnectedCallback(ulong clientId)
-    {
-        /*playerDataNetworkList.Add(new PlayerData{
-            clientId = clientId,
-            colorId =  GetFirstUnusedColorId()
-        });
-
-        SetPlayerNameServerRpc(GetPlayerName());
-        SetPlayerIdServerRpc(AuthenticationService.Instance.PlayerId);*/
-    }
-
-    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
-    {
-        /*if(SceneManager.GetActiveScene().name != Loader.Scene.CharacterSelectScene.ToString()){
-            connectionApprovalResponse.Approved = false;
-            connectionApprovalResponse.Reason = "Game is already in progress";
-            return;
-        }
-
-        if(NetworkManager.Singleton.ConnectedClientsList.Count >= MAX_PLAYER_AMOUNT){
-            connectionApprovalResponse.Approved = false;
-            connectionApprovalResponse.Reason = "Game is full";
-            return;
-        }
-
-        connectionApprovalResponse.Approved = true;*/
     }
     
 }
