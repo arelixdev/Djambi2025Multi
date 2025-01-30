@@ -27,6 +27,7 @@ public class GameUI : MonoBehaviour
 
     [Header("Create Menu")]
     [SerializeField] private GameObject createRoomPanel;
+    [SerializeField] private TMP_Dropdown numberPlayerDropdown;
     [SerializeField] private TMP_InputField gameNameInput;
     [SerializeField] private Toggle privateGameToggle;
 
@@ -43,6 +44,11 @@ public class GameUI : MonoBehaviour
     {
         instance = this;
         RegisterEvents();
+    }
+
+    public int GetNumberPlayerValue()
+    {
+        return numberPlayerDropdown.value + 2;
     }
 
     void Start()
@@ -131,7 +137,6 @@ public class GameUI : MonoBehaviour
             {
                 return;
             }
-            Debug.Log("Create Room" + gameNameInput.text + " _ " + privateGameToggle.isOn);
             menuAnimator.SetTrigger(ANIMATOR_TRIGGER_WAITINNG_ROOM);
             PlayerManager.Instance.CreateRoom();
             createRoomPanel.SetActive(false);

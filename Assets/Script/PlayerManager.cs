@@ -10,6 +10,10 @@ public class PlayerManager : MonoBehaviour
 
     private string playerName;
 
+    // Control vars
+    bool isHost;
+    bool isPlayer;
+
     void Awake()
     {
         Instance = this;
@@ -30,10 +34,9 @@ public class PlayerManager : MonoBehaviour
 
     public void CreateRoom()
     {
-        NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnectionApprovalCallback;
-        NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
-        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_Server_OnClientDisconnectCallback;
-        NetworkManager.Singleton.StartHost();
+        Debug.Log("Create Room" + GameUI.instance.GetNumberPlayerValue());
+        Server.Instance.Init(GameUI.instance.GetNumberPlayerValue());
+        //Client.Instance.Init();
     }
 
     private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)
@@ -73,4 +76,5 @@ public class PlayerManager : MonoBehaviour
 
         connectionApprovalResponse.Approved = true;*/
     }
+    
 }
