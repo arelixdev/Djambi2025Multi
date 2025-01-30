@@ -83,8 +83,8 @@ public class GameUI : MonoBehaviour
     {
         menuAnimator.SetTrigger("InGameMenu");
         SetLocalGame?.Invoke(true);
-        server.Init(8007);
-        client.Init("127.0.0.1", 8007);
+        //server.Init(8007);
+        //client.Init("127.0.0.1", 8007);
     }
 
     #region OnlineMenu

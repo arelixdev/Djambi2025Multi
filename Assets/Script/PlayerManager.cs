@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -32,11 +33,12 @@ public class PlayerManager : MonoBehaviour
         PlayerPrefs.SetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, name);
     }
 
-    public void CreateRoom()
+    public async void CreateRoom()
     {
         Debug.Log("Create Room" + GameUI.instance.GetNumberPlayerValue());
-        Server.Instance.Init(GameUI.instance.GetNumberPlayerValue());
-        //Client.Instance.Init();
+        await Server.Instance.Init(GameUI.instance.GetNumberPlayerValue());
+        await Task.Delay(100);
+        Client.Instance.Init(Server.Instance.GetJoinCode());
     }
 
     private void NetworkManager_Server_OnClientDisconnectCallback(ulong clientId)

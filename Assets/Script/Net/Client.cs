@@ -1,5 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Relay;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 
 public class Client : MonoBehaviour
@@ -11,6 +17,9 @@ public class Client : MonoBehaviour
         Instance = this;
     }
 
+    // Allocation response objects
+    JoinAllocation playerAllocation;
+
     public NetworkDriver driver;
 
     private NetworkConnection connection;
@@ -20,18 +29,66 @@ public class Client : MonoBehaviour
     public Action connectionDropped;
 
     //Methods
-    public void Init(string ip, ushort port)
+    public async Task Init(string joinCode)
     {
-        driver = NetworkDriver.Create();
-        NetworkEndpoint endPoint = NetworkEndpoint.Parse(ip, port);
+        if (String.IsNullOrEmpty(joinCode))
+        {
+            Debug.LogError("Please input a join code.");
+            return;
+        }
+
+        await InitializeUnityServices();
+
+        Debug.Log("Player - Joining host allocation using join code. Upon success, I have 10 seconds to BIND to the Relay server that I've allocated.");
+
+        try
+        {
+            playerAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+            Debug.Log("Player Allocation ID: " + playerAllocation.AllocationId);
+        }
+        catch (RelayServiceException ex)
+        {
+            Debug.LogError(ex.Message + "\n" + ex.StackTrace);
+        }
+        Debug.Log("Player - Binding to the Relay server using UTP.");
+
+        // Extract the Relay server data from the Join Allocation response.
+        var relayServerData = new RelayServerData(playerAllocation, "udp");
+
+        // Create NetworkSettings using the Relay server data.
+        var settings = new NetworkSettings();
+        settings.WithRelayParameters(ref relayServerData);
+        
+        driver = NetworkDriver.Create(settings);
+        /*NetworkEndpoint endPoint = NetworkEndpoint.Parse(ip, port);
 
         connection = driver.Connect(endPoint);
 
         Debug.Log("Attemping to connect to Server on" + endPoint.Address);
 
-        isActive = true;
+        isActive = true;*/
 
         RegisterToEvent();
+    }
+
+    private async Task InitializeUnityServices()
+    {
+        if (!UnityServices.State.Equals(ServicesInitializationState.Initialized))
+        {
+            try
+            {
+                await UnityServices.InitializeAsync();
+                Debug.Log("Unity Services Initialized!");
+
+                // S'authentifier (obligatoire pour utiliser Relay)
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                Debug.Log("Signed in Anonymously!");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Unity Services Initialization Failed: {e.Message}");
+            }
+        }
     }
     public void Shutdown()
     {

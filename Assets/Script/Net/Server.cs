@@ -15,13 +15,13 @@ public class Server : MonoBehaviour
 {
     public static Server Instance { get; private set; }
 
-    // Allocation response objects
-    Allocation hostAllocation;
-
     private void Awake()
     {
         Instance = this;
     }
+
+    // Allocation response objects
+    Allocation hostAllocation;
 
     public NetworkDriver driver;
 
@@ -50,7 +50,12 @@ public class Server : MonoBehaviour
         return regions[0].Id;
     }
 
-    public async void Init(int numberPlayerMax)
+    public string GetJoinCode()
+    {
+        return joinCode;
+    }
+
+    public async Task Init(int numberPlayerMax)
     {
         await InitializeUnityServices();
         string region = GetRegionOrQosDefault();
