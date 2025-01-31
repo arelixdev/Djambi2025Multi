@@ -140,7 +140,7 @@ public class Client : MonoBehaviour
         driver.ScheduleUpdate().Complete();
         CheckAlive();
 
-        UpdateMessagePump();*/
+        */
         // Skip update logic if the Player is not yet bound.
         if (!driver.IsCreated)
         {
@@ -153,6 +153,7 @@ public class Client : MonoBehaviour
 
         // Resolve event queue.
         NetworkEvent.Type eventType;
+        UpdateMessagePump();
         while ((eventType = connection.PopEvent(driver, out var stream)) != NetworkEvent.Type.Empty)
         {
             switch (eventType)

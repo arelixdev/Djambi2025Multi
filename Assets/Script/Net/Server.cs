@@ -223,8 +223,10 @@ public class Server : MonoBehaviour
             connections.Add(incomingConnection);
         }
 
+        UpdateMessagePump();
+
         // Process events from all connections.
-        for (int i = 0; i < connections.Length; i++)
+        /*for (int i = 0; i < connections.Length; i++)
         {
             Assert.IsTrue(connections[i].IsCreated);
 
@@ -251,7 +253,7 @@ public class Server : MonoBehaviour
                         break;
                 }
             }
-        }
+        }*/
 
     }
 
