@@ -34,7 +34,8 @@ public class Server : MonoBehaviour
 
     public Action connectionDropped;
 
-    string joinCode = "n/a";
+    string joinCode;
+    string roomName;
 
     List<Region> regions = new List<Region>();
 
@@ -56,6 +57,16 @@ public class Server : MonoBehaviour
         return joinCode;
     }
 
+    public string GetRoomName()
+    {
+        return roomName;
+    }
+
+    public void SetRoomName(string name)
+    {
+        roomName = name;
+    }
+
     public Allocation GetHostAllocation()
     {
         return hostAllocation;
@@ -66,7 +77,7 @@ public class Server : MonoBehaviour
         return connections.Length;
     }
 
-    public async Task Init(int numberPlayerMax)
+    public async Task Init(int numberPlayerMax, string roomName)
     {
         await InitializeUnityServices();
         string region = GetRegionOrQosDefault();
@@ -116,24 +127,6 @@ public class Server : MonoBehaviour
         }
 
         isActive = true;
-
-
-        /*NetworkEndpoint endPoint = NetworkEndpoint.AnyIpv4;
-        endPoint.Port = port;
-
-        if(driver.Bind(endPoint) != 0)
-        {
-            Debug.Log("Failed to bind to port " + endPoint.Port);
-            return;
-        }
-        else
-        {
-            driver.Listen();
-            Debug.Log("Server started on port " + endPoint.Port);
-        }
-
-        connections = new NativeList<NetworkConnection>(4, Allocator.Persistent); 
-        isActive = true;*/
     }
 
     private async Task InitializeUnityServices()
@@ -157,12 +150,12 @@ public class Server : MonoBehaviour
     }
     public void Shutdown()
     {
-        /*if(isActive)
+        if(driver.IsCreated)
         {
             driver.Dispose();
             connections.Dispose();
             isActive = false;
-        }*/
+        }
     }
 
     public void OnDestroy() {
@@ -170,16 +163,6 @@ public class Server : MonoBehaviour
     }
 
     public void Update(){
-        /*if(!isActive)
-            return;
-
-        KeepAlive();
-
-        driver.ScheduleUpdate().Complete();
-
-        CleanupConnections();
-        AcceptNewConnections();
-        UpdateMessagePump();*/
 
          // Skip update logic if the Host is not yet bound.
         if (!driver.IsCreated)
@@ -264,30 +247,6 @@ public class Server : MonoBehaviour
             lastKeepAlive = Time.time;
             BroadCast(new NetKeepAlive());
         }
-    }
-    private void CleanupConnections()
-    {
-        for(int i = 0; i < connections.Length; i++)
-        {
-            if(!connections[i].IsCreated)
-            {
-                Debug.Log("Client disconnected from server BIP BOOP");
-                connections.RemoveAtSwapBack(i);
-                --i;
-            }
-        }
-    }
-    private void AcceptNewConnections()
-    {
-        NetworkConnection incomingConnection;
-        while ((incomingConnection = driver.Accept()) != default(NetworkConnection))
-        {
-            // Adds the requesting Player to the serverConnections list.
-            // This also sends a Connect event back the requesting Player,
-            // as a means of acknowledging acceptance.
-            Debug.Log("Accepted an incoming connection.");
-            connections.Add(incomingConnection);
-        } 
     }
     private void UpdateMessagePump()
     {

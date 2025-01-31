@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum cameraAngle{
     menu = 0,
@@ -12,7 +13,7 @@ public enum cameraAngle{
 public class GameUI : MonoBehaviour
 {
     private const string ANIMATOR_TRIGGER_WAITINNG_ROOM = "HostMenu"; //TODO change to waiting room
-    public static GameUI instance { get; private set; }
+    public static GameUI Instance { get; private set; }
 
     [Header("Net")]
     public Server server;
@@ -32,8 +33,13 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Toggle privateGameToggle;
 
     [Header("Waiting Menu")]
+    [SerializeField] private GameObject waitingCreationRoomPanel; 
+    [SerializeField] private TMP_Text roomNameText;
     [SerializeField] private TMP_Text numberPlayerWaitingGame;
+    [SerializeField] private TMP_Text roomCodeText;
     [SerializeField] private Button startButton;
+
+    private string hiddenText = "********";
     
 
     
@@ -42,7 +48,7 @@ public class GameUI : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        Instance = this;
         RegisterEvents();
     }
 
@@ -59,6 +65,18 @@ public class GameUI : MonoBehaviour
         playerNameInputfield.onValueChanged.AddListener((string newText) => {
             PlayerManager.Instance.SetPlayerName(newText);
         });
+
+        EventTrigger trigger = roomCodeText.gameObject.AddComponent<EventTrigger>();
+
+        // Pointer Enter
+        EventTrigger.Entry entryEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        entryEnter.callback.AddListener((data) => ShowRoomCode());
+        trigger.triggers.Add(entryEnter);
+
+        // Pointer Exit
+        EventTrigger.Entry entryExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        entryExit.callback.AddListener((data) => HideRoomCode());
+        trigger.triggers.Add(entryExit);
     }
 
     //Cameras
@@ -75,6 +93,23 @@ public class GameUI : MonoBehaviour
     void Update()
     {
         numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/4)";
+    }
+
+    public void UpdateRoomInformation(){
+
+        roomNameText.text = gameNameInput.text;
+        roomCodeText.text = hiddenText;
+        waitingCreationRoomPanel.SetActive(false);
+    }
+
+    public void ShowRoomCode()
+    {
+        roomCodeText.text = Server.Instance.GetJoinCode();
+    }
+
+    public void HideRoomCode()
+    {
+        roomCodeText.text = hiddenText;
     }
 
     //Button
@@ -138,12 +173,17 @@ public class GameUI : MonoBehaviour
                 return;
             }
             menuAnimator.SetTrigger(ANIMATOR_TRIGGER_WAITINNG_ROOM);
-            PlayerManager.Instance.CreateRoom();
+            PlayerManager.Instance.CreateRoom(gameNameInput.text);
             createRoomPanel.SetActive(false);
         }
     #endregion
 
-    
+    #region WaitingRoomMenu
+
+    public void OnWaitingRoomClipboardBtn()
+    {
+        GUIUtility.systemCopyBuffer = Server.Instance.GetJoinCode();
+    }
 
     public void OnHostBackButton()
     {
@@ -161,6 +201,8 @@ public class GameUI : MonoBehaviour
         Server.Instance.BroadCast(new NetStartGame());
         //start game if 2 player 3 or 4 or 5 or 6 change game board
     }
+
+    #endregion
 
     public void OnLeaveFromGameMenu()
     {

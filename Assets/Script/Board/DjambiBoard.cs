@@ -1000,7 +1000,7 @@ public class DjambiBoard : MonoBehaviour
     public void BackMenu()
     {
         RestartGame();
-        GameUI.instance.OnLeaveFromGameMenu();
+        GameUI.Instance.OnLeaveFromGameMenu();
 
         Client.Instance.Shutdown();
         Server.Instance.Shutdown();
@@ -1021,7 +1021,7 @@ public class DjambiBoard : MonoBehaviour
         NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
         NetUtility.C_MAKE_KILL += OnMakeKillClient;
 
-        GameUI.instance.SetLocalGame += OnSetLocalGame;
+        GameUI.Instance.SetLocalGame += OnSetLocalGame;
     }
 
     
@@ -1037,7 +1037,7 @@ public class DjambiBoard : MonoBehaviour
         NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
         NetUtility.C_MAKE_KILL -= OnMakeKillClient;
 
-        GameUI.instance.SetLocalGame -= OnSetLocalGame;
+        GameUI.Instance.SetLocalGame -= OnSetLocalGame;
     }
 
     //Server
@@ -1101,10 +1101,10 @@ public class DjambiBoard : MonoBehaviour
         InitBoardUnit();
         if(currentTeam == 0 || currentTeam == 1)
         {
-            GameUI.instance.ChangeCamera(cameraAngle.botSide);
+            GameUI.Instance.ChangeCamera(cameraAngle.botSide);
         } else if(currentTeam == 2 || currentTeam == 3)
         {
-            GameUI.instance.ChangeCamera(cameraAngle.topSide);
+            GameUI.Instance.ChangeCamera(cameraAngle.topSide);
         }
     }
 

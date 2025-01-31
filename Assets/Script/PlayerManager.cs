@@ -33,11 +33,11 @@ public class PlayerManager : MonoBehaviour
         PlayerPrefs.SetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, name);
     }
 
-    public async void CreateRoom()
+    public async void CreateRoom(string roomName)
     {
-        Debug.Log("Create Room" + GameUI.instance.GetNumberPlayerValue());
+        Debug.Log("Create Room" + GameUI.Instance.GetNumberPlayerValue());
     
-        await Server.Instance.Init(GameUI.instance.GetNumberPlayerValue());
+        await Server.Instance.Init(GameUI.Instance.GetNumberPlayerValue(), roomName);
 
         // Attendre que le join code soit valide avant de démarrer le client
         while (string.IsNullOrEmpty(Server.Instance.GetJoinCode()))
@@ -46,6 +46,8 @@ public class PlayerManager : MonoBehaviour
         }
 
         Debug.Log("Join Code obtained: " + Server.Instance.GetJoinCode());
+
+        GameUI.Instance.UpdateRoomInformation();
 
         Client.Instance.Init(Server.Instance.GetJoinCode());
     }
