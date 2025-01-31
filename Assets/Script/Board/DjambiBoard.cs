@@ -1088,6 +1088,9 @@ public class DjambiBoard : MonoBehaviour
 
 
         Debug.Log("Welcome to the game, you are team " + currentTeam);
+
+        //Update Client
+        GameUI.Instance.UpdateClientRoomInformation();
         TurnInterfaceManager.instance.SetYourColor(currentTeam);
 
         if(localGame && currentTeam == 0)

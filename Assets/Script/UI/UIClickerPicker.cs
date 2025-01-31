@@ -11,7 +11,6 @@ public class UIClickerPicker : MonoBehaviour
     private void Start()
     {
         image = GetComponent<Image>();
-        image.color = colorPicker.color;
         colorPicker.onColorChanged += OnColorChanged;
     }
 

@@ -47,9 +47,9 @@ public class PlayerManager : MonoBehaviour
 
         Debug.Log("Join Code obtained: " + Server.Instance.GetJoinCode());
 
-        GameUI.Instance.UpdateRoomInformation();
+        await Client.Instance.Init(Server.Instance.GetJoinCode());
 
-        Client.Instance.Init(Server.Instance.GetJoinCode());
+        GameUI.Instance.UpdateCreateRoomInformation();
     }
     
 }

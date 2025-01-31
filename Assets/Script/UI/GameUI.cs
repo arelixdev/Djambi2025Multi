@@ -37,9 +37,11 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TMP_Text roomNameText;
     [SerializeField] private TMP_Text numberPlayerWaitingGame;
     [SerializeField] private TMP_Text roomCodeText;
+    [SerializeField] private Transform playerList;
+    [SerializeField] private GameObject playerComponentPrefab;
     [SerializeField] private Button startButton;
-
     private string hiddenText = "********";
+    private PlayerComponent myPlayerComponent;
     
 
     
@@ -49,6 +51,7 @@ public class GameUI : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        waitingCreationRoomPanel.SetActive(true);
         RegisterEvents();
     }
 
@@ -90,16 +93,20 @@ public class GameUI : MonoBehaviour
     }
 
 
-    void Update()
-    {
-        numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/4)";
-    }
-
-    public void UpdateRoomInformation(){
+    public void UpdateCreateRoomInformation(){
 
         roomNameText.text = gameNameInput.text;
         roomCodeText.text = hiddenText;
         waitingCreationRoomPanel.SetActive(false);
+        
+    }
+
+    public void UpdateClientRoomInformation()
+    {
+        numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/{GetNumberPlayerValue()})";
+        myPlayerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
+        myPlayerComponent.SetPlayerName(PlayerManager.Instance.GetPlayerName());
+
     }
 
     public void ShowRoomCode()
@@ -183,6 +190,25 @@ public class GameUI : MonoBehaviour
     public void OnWaitingRoomClipboardBtn()
     {
         GUIUtility.systemCopyBuffer = Server.Instance.GetJoinCode();
+    }
+
+
+    bool isReady = false;
+
+    public void OnWaitingRoomReadyBtn()
+    {
+        isReady = !isReady;
+        if(isReady)
+        {
+            myPlayerComponent.SetReady();
+        }
+        else
+        {
+            myPlayerComponent.SetNotReady();
+        }
+
+        //TODO send ready to server and broadcast to all player if all player ready start game after X seconds
+        
     }
 
     public void OnHostBackButton()
