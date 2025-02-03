@@ -1015,11 +1015,13 @@ public class DjambiBoard : MonoBehaviour
         NetUtility.S_WELCOME += OnWelcomeServer;
         NetUtility.S_MAKE_MOVE += OnMakeMoveServer;
         NetUtility.S_MAKE_KILL += OnMakeKillServer;
+        NetUtility.S_CLIENT_INFORMATION += OnClientInformationServer;
 
         NetUtility.C_WELCOME += OnWelcomeClient;
         NetUtility.C_START_GAME += OnStartGameClient;
         NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
         NetUtility.C_MAKE_KILL += OnMakeKillClient;
+        NetUtility.C_CLIENT_INFORMATION += OnClientInformationClient;
 
         GameUI.Instance.SetLocalGame += OnSetLocalGame;
     }
@@ -1031,11 +1033,13 @@ public class DjambiBoard : MonoBehaviour
         NetUtility.S_WELCOME -= OnWelcomeServer;
         NetUtility.S_MAKE_MOVE -= OnMakeMoveServer;
         NetUtility.S_MAKE_KILL -= OnMakeKillServer;
+        NetUtility.S_CLIENT_INFORMATION -= OnClientInformationServer;
 
         NetUtility.C_WELCOME -= OnWelcomeClient;
         NetUtility.C_START_GAME -= OnStartGameClient;
         NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
         NetUtility.C_MAKE_KILL -= OnMakeKillClient;
+        NetUtility.C_CLIENT_INFORMATION -= OnClientInformationClient;
 
         GameUI.Instance.SetLocalGame -= OnSetLocalGame;
     }
@@ -1059,6 +1063,19 @@ public class DjambiBoard : MonoBehaviour
             //Start the game
             Server.Instance.BroadCast(new NetStartGame());
         }*/   
+    }
+
+    private void OnClientInformationServer(NetMessage message, NetworkConnection connection)
+    {
+        NetClientInformation nci = message as NetClientInformation;
+
+        Server.Instance.clients.Add(new ClientInformation{
+            playerName = nci.playerName,
+            playerValue = nci.playerValue,
+            colorValue = nci.playerValue
+        });
+
+        Server.Instance.BroadCast(message);
     }
 
     private void OnMakeMoveServer(NetMessage message, NetworkConnection connection)
@@ -1146,6 +1163,12 @@ public class DjambiBoard : MonoBehaviour
             }
         }
         ChangeTurn();
+    }
+
+    private void OnClientInformationClient(NetMessage message)
+    {
+        NetClientInformation nci = message as NetClientInformation;
+        Debug.Log("Client Information: " + nci.playerName);
     }
 
     //Not Network

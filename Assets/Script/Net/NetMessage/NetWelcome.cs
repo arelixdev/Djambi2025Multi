@@ -6,6 +6,8 @@ public class NetWelcome : NetMessage
     public int AssignedTeam{set;get;}
     public int numberPlayer{set;get;}
 
+    public string playerName{set;get;}
+
     public NetWelcome() // <-- Making the box
     {
         Code = OpCode.WELCOME;
@@ -21,7 +23,9 @@ public class NetWelcome : NetMessage
     {
         writer.WriteByte((byte)Code);
         writer.WriteInt(AssignedTeam);
-        writer.WriteInt(numberPlayer);  
+        writer.WriteInt(numberPlayer); 
+
+        //writer.WriteFixedString128(playerName); 
     }
 
     public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
@@ -29,6 +33,8 @@ public class NetWelcome : NetMessage
         //We already read the byte in the NetUtility::OnData
         AssignedTeam = reader.ReadInt();
         numberPlayer = reader.ReadInt();
+
+        //playerName = reader.ReadFixedString128().ToString();
     }
 
     public override void ReceivedOnClient()

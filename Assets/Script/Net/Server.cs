@@ -12,6 +12,13 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 using UnityEngine.Assertions;
 
+[Serializable]
+public class ClientInformation{
+    public string playerName;
+    public int playerValue;
+    public int colorValue;
+}
+
 public class Server : MonoBehaviour
 {
     public static Server Instance { get; private set; }
@@ -36,6 +43,9 @@ public class Server : MonoBehaviour
 
     string joinCode;
     string roomName;
+
+    [SerializeField] 
+    public List<ClientInformation> clients = new List<ClientInformation>();
 
     List<Region> regions = new List<Region>();
 
@@ -170,11 +180,6 @@ public class Server : MonoBehaviour
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Sending message to all clients" + connections.Length);
-        }
-
         // This keeps the binding to the Relay server alive,
         // preventing it from timing out due to inactivity.
         driver.ScheduleUpdate().Complete();
@@ -204,6 +209,7 @@ public class Server : MonoBehaviour
             }
             Debug.Log("Accepted an incoming connection.");
             connections.Add(incomingConnection);
+
         }
 
         UpdateMessagePump();
@@ -283,6 +289,7 @@ public class Server : MonoBehaviour
 
     public void BroadCast(NetMessage msg)
     {
+        //Debug.Log(connections.Length);
         for(int i = 0; i < connections.Length; i++)
         {
             if(connections[i].IsCreated)

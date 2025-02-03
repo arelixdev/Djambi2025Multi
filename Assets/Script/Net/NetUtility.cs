@@ -9,6 +9,7 @@ public enum OpCode{
     MAKE_MOVE = 4,
     MAKE_KILL = 5,
     REMATCH = 6,
+    CLIENT_INFORMATION = 7,
 }
 
 public static class NetUtility
@@ -37,6 +38,9 @@ public static class NetUtility
             case OpCode.REMATCH:
                 msg = new NetRematch(stream);
                 break;
+            case OpCode.CLIENT_INFORMATION:
+                msg = new NetClientInformation(stream);
+                break;
             default:
                 Debug.Log("Unknown OpCode: " + opCode);
                 break;
@@ -59,10 +63,12 @@ public static class NetUtility
     public static Action<NetMessage> C_MAKE_MOVE;
     public static Action<NetMessage> C_MAKE_KILL;
     public static Action<NetMessage> C_REMATCH;
+    public static Action<NetMessage> C_CLIENT_INFORMATION;
     public static Action<NetMessage, NetworkConnection> S_KEEP_ALIVE;
     public static Action<NetMessage, NetworkConnection> S_WELCOME;
     public static Action<NetMessage, NetworkConnection> S_START_GAME;
     public static Action<NetMessage, NetworkConnection> S_MAKE_MOVE;
     public static Action<NetMessage, NetworkConnection> S_MAKE_KILL;
     public static Action<NetMessage, NetworkConnection> S_REMATCH;
+    public static Action<NetMessage, NetworkConnection> S_CLIENT_INFORMATION;
 }

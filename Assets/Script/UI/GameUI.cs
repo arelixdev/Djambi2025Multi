@@ -32,6 +32,10 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TMP_InputField gameNameInput;
     [SerializeField] private Toggle privateGameToggle;
 
+    [Header("Join Menu")]
+    [SerializeField] private GameObject joinRoomPanel;
+    [SerializeField] private TMP_InputField codeInput;
+
     [Header("Waiting Menu")]
     [SerializeField] private GameObject waitingCreationRoomPanel; 
     [SerializeField] private TMP_Text roomNameText;
@@ -60,9 +64,15 @@ public class GameUI : MonoBehaviour
         return numberPlayerDropdown.value + 2;
     }
 
+    public string GetPlayerName()
+    {
+        return playerNameInputfield.text;
+    }
+
     void Start()
     {
         createRoomPanel.SetActive(false);
+        joinRoomPanel.SetActive(false);
 
         playerNameInputfield.text = PlayerManager.Instance.GetPlayerName();
         playerNameInputfield.onValueChanged.AddListener((string newText) => {
@@ -103,6 +113,10 @@ public class GameUI : MonoBehaviour
 
     public void UpdateClientRoomInformation()
     {
+        NetClientInformation ci = new NetClientInformation();
+        ci.playerName = PlayerManager.Instance.GetPlayerName();
+        ci.playerValue = DjambiBoard.Instance.GetPlayerCount();
+        client.SendToServer(ci);
         numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/{GetNumberPlayerValue()})";
         myPlayerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
         myPlayerComponent.SetPlayerName(PlayerManager.Instance.GetPlayerName());
@@ -150,6 +164,11 @@ public class GameUI : MonoBehaviour
         createRoomPanel.SetActive(true);
     }
 
+    public void OnOnlineJoinButton()
+    {
+        joinRoomPanel.SetActive(true);
+    }
+
     public void OnOnlineConnectButton()
     {
         SetLocalGame?.Invoke(false);
@@ -183,6 +202,33 @@ public class GameUI : MonoBehaviour
             PlayerManager.Instance.CreateRoom(gameNameInput.text);
             createRoomPanel.SetActive(false);
         }
+    #endregion
+
+    #region JoinRoomMenu
+
+    public void OnJoinRoomCloseButton()
+    {
+        joinRoomPanel.SetActive(false);
+    }
+
+    public void OnJoinRoomConnectButton(){
+        if(codeInput.text == "")
+        {
+            return;
+        }
+        //Try to connect to server
+        menuAnimator.SetTrigger(ANIMATOR_TRIGGER_WAITINNG_ROOM);
+        JoinRoomWithCode();
+    }
+
+    public async void JoinRoomWithCode()
+    {
+        Client.Instance.Init(codeInput.text);
+
+        GameUI.Instance.UpdateCreateRoomInformation();
+        joinRoomPanel.SetActive(false);
+    }
+
     #endregion
 
     #region WaitingRoomMenu

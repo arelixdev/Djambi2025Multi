@@ -120,13 +120,13 @@ public class Client : MonoBehaviour
     }
     public void Shutdown()
     {
-        /*if(isActive)
+        if(isActive)
         {
             //UnregisterToEvent();
             driver.Dispose();
             isActive = false;
             connection = default(NetworkConnection);
-        }*/
+        }
     }
 
     public void OnDestroy() {
@@ -153,7 +153,7 @@ public class Client : MonoBehaviour
 
         // Resolve event queue.
         NetworkEvent.Type eventType;
-        UpdateMessagePump();
+            UpdateMessagePump();
         while ((eventType = connection.PopEvent(driver, out var stream)) != NetworkEvent.Type.Empty)
         {
             switch (eventType)
