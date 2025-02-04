@@ -117,12 +117,23 @@ public class GameUI : MonoBehaviour
         ci.playerName = PlayerManager.Instance.GetPlayerName();
         ci.playerValue = DjambiBoard.Instance.GetPlayerCount();
         client.SendToServer(ci);
+    }
 
-        //TODO Need update by number of client in room
+    public void UpdateLobbyClient()
+    {
         numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/{GetNumberPlayerValue()})";
-        myPlayerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
-        myPlayerComponent.SetPlayerName(PlayerManager.Instance.GetPlayerName());
+        Debug.Log("Player Clients" + PlayerManager.Instance.clients.Count);
+        //Clear list 
+        foreach (Transform child in playerList)
+        {
+            Destroy(child.gameObject);
+        }
 
+        foreach (var client in PlayerManager.Instance.clients)
+        {
+            PlayerComponent playerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
+            playerComponent.SetPlayerName(client.playerName);
+        }
     }
 
     public void ShowRoomCode()

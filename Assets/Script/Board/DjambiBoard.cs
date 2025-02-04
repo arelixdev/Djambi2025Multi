@@ -1188,6 +1188,7 @@ public class DjambiBoard : MonoBehaviour
                 Debug.Log($"Joueur : {client.playerName}, Valeur : {client.playerValue}, Couleur : {client.colorValue}");
             }
         }
+        GameUI.Instance.UpdateLobbyClient();
     }
 
     //Not Network
