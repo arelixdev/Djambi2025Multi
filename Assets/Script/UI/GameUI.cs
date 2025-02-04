@@ -117,6 +117,8 @@ public class GameUI : MonoBehaviour
         ci.playerName = PlayerManager.Instance.GetPlayerName();
         ci.playerValue = DjambiBoard.Instance.GetPlayerCount();
         client.SendToServer(ci);
+
+        //TODO Need update by number of client in room
         numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/{GetNumberPlayerValue()})";
         myPlayerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
         myPlayerComponent.SetPlayerName(PlayerManager.Instance.GetPlayerName());
@@ -139,8 +141,6 @@ public class GameUI : MonoBehaviour
     {
         menuAnimator.SetTrigger("InGameMenu");
         SetLocalGame?.Invoke(true);
-        //server.Init(8007);
-        //client.Init("127.0.0.1", 8007);
     }
 
     #region OnlineMenu
@@ -153,9 +153,6 @@ public class GameUI : MonoBehaviour
     public void OnOnlineHostButton()
     {
         SetLocalGame?.Invoke(false);
-
-        //server.Init(8007);
-        //client.Init("IP RANDOM", 8007);
 
         if(PlayerManager.Instance.GetPlayerName() == "")
         {
@@ -172,8 +169,7 @@ public class GameUI : MonoBehaviour
     public void OnOnlineConnectButton()
     {
         SetLocalGame?.Invoke(false);
-        
-        //client.Init(addressInput.text, 8007);
+
         startButton.gameObject.SetActive(false);
         menuAnimator.SetTrigger("HostMenu");
     }

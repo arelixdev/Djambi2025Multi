@@ -19,13 +19,40 @@ public class ClientInformation{
     public int colorValue;
 }
 
+public class ClientList
+{
+    private List<ClientInformation> _clients = new List<ClientInformation>();
+
+    public Action OnChanged; // Événement déclenché à chaque modification
+
+    public void Add(ClientInformation client)
+    {
+        _clients.Add(client);
+        OnChanged?.Invoke();
+    }
+
+    public void Remove(ClientInformation client)
+    {
+        _clients.Remove(client);
+        OnChanged?.Invoke();
+    }
+
+    public List<ClientInformation> GetClients()
+    {
+        return new List<ClientInformation>(_clients); // Retourne une copie pour éviter les modifications directes
+    }
+}
+
 public class Server : MonoBehaviour
 {
     public static Server Instance { get; private set; }
 
+    public ClientList Clients = new ClientList();
+
     private void Awake()
     {
         Instance = this;
+        Clients.OnChanged = SendLobbyUpdate; // Appelle SendLobbyUpdate() à chaque modification
     }
 
     // Allocation response objects
@@ -44,8 +71,7 @@ public class Server : MonoBehaviour
     string joinCode;
     string roomName;
 
-    [SerializeField] 
-    public List<ClientInformation> clients = new List<ClientInformation>();
+    
 
     List<Region> regions = new List<Region>();
 
@@ -203,46 +229,12 @@ public class Server : MonoBehaviour
             // This also sends a Connect event back the requesting Player,
             // as a means of acknowledging acceptance.
             Debug.Log($"Tentative de connexion détectée : {incomingConnection}");
-            if (!incomingConnection.IsCreated)
-            {
-                Debug.LogError("La connexion entrante n'a pas été créée correctement !");
-            }
-            Debug.Log("Accepted an incoming connection.");
             connections.Add(incomingConnection);
-
+            
+            SendLobbyUpdate();  
         }
 
         UpdateMessagePump();
-
-        // Process events from all connections.
-        /*for (int i = 0; i < connections.Length; i++)
-        {
-            Assert.IsTrue(connections[i].IsCreated);
-
-            // Resolve event queue.
-            NetworkEvent.Type eventType;
-            while ((eventType = driver.PopEventForConnection(connections[i], out var stream)) != NetworkEvent.Type.Empty)
-            {
-                switch (eventType)
-                {
-                    case NetworkEvent.Type.Connect:
-                        Debug.Log("Client successfully connected to the host!");
-                        break;
-                    // Handle Relay events.
-                    case NetworkEvent.Type.Data:
-                        FixedString32Bytes msg = stream.ReadFixedString32();
-                        Debug.Log($"Server received msg: {msg}");
-                        //hostLatestMessageReceived = msg.ToString();
-                        break;
-
-                    // Handle Disconnect events.
-                    case NetworkEvent.Type.Disconnect:
-                        Debug.Log("Server received disconnect from client");
-                        connections[i] = default(NetworkConnection);
-                        break;
-                }
-            }
-        }*/
 
     }
 
@@ -287,9 +279,16 @@ public class Server : MonoBehaviour
         driver.EndSend(writer);
     }
 
+    public void SendLobbyUpdate()
+    {
+        Debug.Log("Sending lobby update");
+        NetUpdateLobby updateLobby = new NetUpdateLobby();
+        updateLobby.clients = Clients.GetClients();
+        BroadCast(updateLobby);
+    }
+
     public void BroadCast(NetMessage msg)
     {
-        //Debug.Log(connections.Length);
         for(int i = 0; i < connections.Length; i++)
         {
             if(connections[i].IsCreated)

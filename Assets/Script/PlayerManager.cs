@@ -9,6 +9,8 @@ public class PlayerManager : MonoBehaviour
     private const string PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER = "PlayerNameMultiplayer";
     public static PlayerManager Instance { get; private set; }
 
+    public List<ClientInformation> clients = new List<ClientInformation>();
+
     private string playerName;
 
     // Control vars

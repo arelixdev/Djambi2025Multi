@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -1022,6 +1023,7 @@ public class DjambiBoard : MonoBehaviour
         NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
         NetUtility.C_MAKE_KILL += OnMakeKillClient;
         NetUtility.C_CLIENT_INFORMATION += OnClientInformationClient;
+        NetUtility.C_UPDATE_LOBBY+= OnUpdateLobbyClient;
 
         GameUI.Instance.SetLocalGame += OnSetLocalGame;
     }
@@ -1040,6 +1042,7 @@ public class DjambiBoard : MonoBehaviour
         NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
         NetUtility.C_MAKE_KILL -= OnMakeKillClient;
         NetUtility.C_CLIENT_INFORMATION -= OnClientInformationClient;
+        NetUtility.C_UPDATE_LOBBY -= OnUpdateLobbyClient;
 
         GameUI.Instance.SetLocalGame -= OnSetLocalGame;
     }
@@ -1069,10 +1072,12 @@ public class DjambiBoard : MonoBehaviour
     {
         NetClientInformation nci = message as NetClientInformation;
 
-        Server.Instance.clients.Add(new ClientInformation{
-            playerName = nci.playerName,
-            playerValue = nci.playerValue,
-            colorValue = nci.playerValue
+        Debug.Log("BIPBOOP");
+
+        Server.Instance.Clients.Add(new ClientInformation { 
+            playerName = nci.playerName, 
+            playerValue = nci.playerValue, 
+            colorValue = nci.playerValue 
         });
 
         Server.Instance.BroadCast(message);
@@ -1169,6 +1174,20 @@ public class DjambiBoard : MonoBehaviour
     {
         NetClientInformation nci = message as NetClientInformation;
         Debug.Log("Client Information: " + nci.playerName);
+    }
+
+    private void OnUpdateLobbyClient(NetMessage message)
+    {
+        NetUpdateLobby msg = message as NetUpdateLobby;
+        foreach (var client in msg.clients)
+        {
+            bool alreadyExists = PlayerManager.Instance.clients.Any(c => c.playerValue == client.playerValue);
+            if (!alreadyExists)
+            {
+                PlayerManager.Instance.clients.Add(client);
+                Debug.Log($"Joueur : {client.playerName}, Valeur : {client.playerValue}, Couleur : {client.colorValue}");
+            }
+        }
     }
 
     //Not Network
