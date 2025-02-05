@@ -11,11 +11,10 @@ public class PlayerManager : MonoBehaviour
 
     public List<ClientInformation> clients = new List<ClientInformation>();
 
-    private string playerName;
+    public List<Color> colorList = new List<Color>();
 
-    // Control vars
-    bool isHost;
-    bool isPlayer;
+    private string playerName;
+    private int playerValue;
 
     void Awake()
     {
@@ -33,6 +32,16 @@ public class PlayerManager : MonoBehaviour
     {
         playerName = name;
         PlayerPrefs.SetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, name);
+    }
+
+    public int GetPlayerValue()
+    {
+        return playerValue;
+    }
+
+    public void SetPlayerValue(int value)
+    {
+        playerValue = value;
     }
 
     public async void CreateRoom(string roomName)

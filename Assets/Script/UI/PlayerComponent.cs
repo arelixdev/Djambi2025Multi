@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayerComponent : MonoBehaviour
 {
     public TextMeshProUGUI playerName;
-    public Image colorValue;
+    public Image colorObject;
     public GameObject colorPicker;
     public GameObject colorPanel;
 
@@ -27,7 +27,16 @@ public class PlayerComponent : MonoBehaviour
     }
 
     public void ToggleColorPicker() {
-        colorPanel.SetActive(!colorPicker.activeSelf);
+        colorPanel.SetActive(!colorPanel.activeSelf);
+    }
+
+    public void SetupColor(int colorValue){
+        colorObject.color = PlayerManager.Instance.colorList[colorValue];
+    }
+
+    public void DesactivateBtn()
+    {
+        colorObject.GetComponent<Button>().interactable = false;
     }
 
     internal void SetReady()

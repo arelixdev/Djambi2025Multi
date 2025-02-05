@@ -129,10 +129,16 @@ public class GameUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var client in PlayerManager.Instance.clients)
+        for(int i = 0; i < PlayerManager.Instance.clients.Count; i++)
         {
+            ClientInformation client = PlayerManager.Instance.clients[i];
             PlayerComponent playerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
             playerComponent.SetPlayerName(client.playerName);
+            playerComponent.SetupColor(client.playerValue);
+            if(i != PlayerManager.Instance.GetPlayerValue())
+            {
+                playerComponent.DesactivateBtn();
+            }   
         }
     }
 
