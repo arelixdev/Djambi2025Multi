@@ -10,11 +10,16 @@ public class PlayerComponent : MonoBehaviour
     public TextMeshProUGUI playerName;
     public Image colorValue;
     public GameObject colorPicker;
+    public GameObject colorPanel;
+
+    public List<GameObject> colors;
     public GameObject ready;
 
     private void Start() {
         ready.SetActive(false);
         colorPicker.SetActive(false);
+        colorPanel.SetActive(false);
+
     }
 
     public void SetPlayerName(string name) {
@@ -22,7 +27,7 @@ public class PlayerComponent : MonoBehaviour
     }
 
     public void ToggleColorPicker() {
-        colorPicker.SetActive(!colorPicker.activeSelf);
+        colorPanel.SetActive(!colorPicker.activeSelf);
     }
 
     internal void SetReady()
