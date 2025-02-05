@@ -1072,8 +1072,6 @@ public class DjambiBoard : MonoBehaviour
     {
         NetClientInformation nci = message as NetClientInformation;
 
-        Debug.Log("BIPBOOP");
-
         Server.Instance.Clients.Add(new ClientInformation { 
             playerName = nci.playerName, 
             playerValue = nci.playerValue, 
@@ -1174,7 +1172,6 @@ public class DjambiBoard : MonoBehaviour
     private void OnClientInformationClient(NetMessage message)
     {
         NetClientInformation nci = message as NetClientInformation;
-        Debug.Log("Client Information: " + nci.playerName);
     }
 
     private void OnUpdateLobbyClient(NetMessage message)
@@ -1186,7 +1183,6 @@ public class DjambiBoard : MonoBehaviour
             if (!alreadyExists)
             {
                 PlayerManager.Instance.clients.Add(client);
-                Debug.Log($"Joueur : {client.playerName}, Valeur : {client.playerValue}, Couleur : {client.colorValue}");
             }
         }
         GameUI.Instance.UpdateLobbyClient();

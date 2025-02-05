@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Unity.Networking.Transport;
 
 public enum cameraAngle{
     menu = 0,
@@ -206,7 +207,6 @@ public class GameUI : MonoBehaviour
 
         public void OnCreateRoomCreateButton()
         {
-            //TODO Launch server and client create room
             if(gameNameInput.text == "")
             {
                 return;
@@ -296,18 +296,43 @@ public class GameUI : MonoBehaviour
         
     }
 
+    private void OnDestroy() {
+        UnregisterEvents();
+    }
+
      private void RegisterEvents()
     {
+        NetUtility.S_UPDATE_COLOR_LOBBY += OnUpdateColorLobbyServer;
+
         NetUtility.C_START_GAME += OnStartGameClient; 
+        NetUtility.C_UPDATE_COLOR_LOBBY += OnUpdateColorLobbyClient;
     }
 
     private void UnregisterEvents()
     {
+        NetUtility.S_UPDATE_COLOR_LOBBY -= OnUpdateColorLobbyServer;
+
         NetUtility.C_START_GAME -= OnStartGameClient;
+        NetUtility.C_UPDATE_COLOR_LOBBY -= OnUpdateColorLobbyClient;
+    }
+
+    private void OnUpdateColorLobbyServer(NetMessage message, NetworkConnection cnn)
+    {
+        NetUpdateColorLobby msg = message as NetUpdateColorLobby;
+        Debug.Log("Update Color Lobby In serveur");
+        PlayerManager.Instance.clients[msg.playerValue].colorValue = msg.colorValue;
+        Server.Instance.BroadCast(msg);
     }
 
     private void OnStartGameClient(NetMessage message)
     {
         menuAnimator.SetTrigger("InGameMenu");
+    }
+
+    internal void OnUpdateColorLobbyClient(NetMessage message)
+    {
+        NetUpdateColorLobby msg = message as NetUpdateColorLobby;
+        Debug.Log("Update Color Lobby in Client");
+        playerList.GetChild(msg.playerValue).GetComponent<PlayerComponent>().UpdateColor(msg.colorValue);
     }
 }

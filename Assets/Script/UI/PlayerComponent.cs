@@ -51,7 +51,20 @@ public class PlayerComponent : MonoBehaviour
 
     public void ChangeColor(int colorValue)
     {
-        colorObject.color = PlayerManager.Instance.colorList[colorValue];
+        Debug.Log("ChangeColor");
+        UpdateColor(colorValue);
+        PlayerManager.Instance.SetColorValue(colorValue);
+        //TODO send to server and broadcast to all clients
+        NetUpdateColorLobby ucl = new NetUpdateColorLobby();
+        ucl.colorValue = colorValue;
+        ucl.playerValue = PlayerManager.Instance.GetPlayerValue();
+        Client.Instance.SendToServer(ucl);
+
         colorPanel.SetActive(false);
+    }
+
+    public void UpdateColor(int colorValue)
+    {
+        colorObject.color = PlayerManager.Instance.colorList[colorValue];
     }
 }

@@ -15,6 +15,7 @@ public class PlayerManager : MonoBehaviour
 
     private string playerName;
     private int playerValue;
+    private int colorValue;
 
     void Awake()
     {
@@ -42,6 +43,16 @@ public class PlayerManager : MonoBehaviour
     public void SetPlayerValue(int value)
     {
         playerValue = value;
+    }
+
+    public int GetColorValue()
+    {
+        return colorValue;
+    }
+
+    public void SetColorValue(int value)
+    {
+        colorValue = value;
     }
 
     public async void CreateRoom(string roomName)
