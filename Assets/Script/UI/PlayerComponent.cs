@@ -48,4 +48,10 @@ public class PlayerComponent : MonoBehaviour
     {
         ready.SetActive(false);
     }
+
+    public void ChangeColor(int colorValue)
+    {
+        colorObject.color = PlayerManager.Instance.colorList[colorValue];
+        colorPanel.SetActive(false);
+    }
 }
