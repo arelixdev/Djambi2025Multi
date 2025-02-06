@@ -28,6 +28,7 @@ public class PlayerComponent : MonoBehaviour
 
     public void ToggleColorPicker() {
         colorPanel.SetActive(!colorPanel.activeSelf);
+        LockColor();
     }
 
     public void SetupColor(int colorValue){
@@ -66,5 +67,24 @@ public class PlayerComponent : MonoBehaviour
     public void UpdateColor(int colorValue)
     {
         colorObject.color = PlayerManager.Instance.colorList[colorValue];
+    }
+
+    internal void LockColor()
+    {
+        foreach(GameObject color in colors)
+        {
+            color.GetComponent<Button>().interactable = true;
+        }
+
+        foreach(ClientInformation client in PlayerManager.Instance.clients)
+        {
+            for(int i = 0; i < colors.Count; i++)
+            {
+                if(client.colorValue == i)
+                {
+                    colors[i].GetComponent<Button>().interactable = false;
+                }
+            }
+        }   
     }
 }

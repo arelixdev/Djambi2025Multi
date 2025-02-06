@@ -1072,10 +1072,24 @@ public class DjambiBoard : MonoBehaviour
     {
         NetClientInformation nci = message as NetClientInformation;
 
+         // Récupérer toutes les couleurs déjà utilisées
+        HashSet<int> usedColors = new HashSet<int>();
+        foreach (var client in PlayerManager.Instance.clients)
+        {
+            usedColors.Add(client.colorValue);
+        }
+
+        // Trouver la première couleur non utilisée
+        int newColor = 0;
+        while (usedColors.Contains(newColor))
+        {
+            newColor++;
+        }
+
         Server.Instance.Clients.Add(new ClientInformation { 
             playerName = nci.playerName, 
             playerValue = nci.playerValue, 
-            colorValue = nci.playerValue 
+            colorValue = newColor
         });
 
         Server.Instance.BroadCast(message);
@@ -1183,6 +1197,7 @@ public class DjambiBoard : MonoBehaviour
             if (!alreadyExists)
             {
                 PlayerManager.Instance.clients.Add(client);
+                Debug.Log("Client added: " + client.playerName + " " + client.colorValue);
             }
         }
         GameUI.Instance.UpdateLobbyClient();

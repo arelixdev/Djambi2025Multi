@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Unity.Networking.Transport;
+using System.Collections.Generic;
 
 public enum cameraAngle{
     menu = 0,
@@ -134,8 +135,12 @@ public class GameUI : MonoBehaviour
         {
             ClientInformation client = PlayerManager.Instance.clients[i];
             PlayerComponent playerComponent = Instantiate(playerComponentPrefab, playerList).GetComponent<PlayerComponent>();
+            if(i == PlayerManager.Instance.GetPlayerValue())
+            {
+                myPlayerComponent = playerComponent;
+            }
             playerComponent.SetPlayerName(client.playerName);
-            playerComponent.SetupColor(client.playerValue);
+            playerComponent.SetupColor(client.colorValue);
             if(i != PlayerManager.Instance.GetPlayerValue())
             {
                 playerComponent.DesactivateBtn();
@@ -319,7 +324,6 @@ public class GameUI : MonoBehaviour
     private void OnUpdateColorLobbyServer(NetMessage message, NetworkConnection cnn)
     {
         NetUpdateColorLobby msg = message as NetUpdateColorLobby;
-        Debug.Log("Update Color Lobby In serveur");
         PlayerManager.Instance.clients[msg.playerValue].colorValue = msg.colorValue;
         Server.Instance.BroadCast(msg);
     }
@@ -332,7 +336,8 @@ public class GameUI : MonoBehaviour
     internal void OnUpdateColorLobbyClient(NetMessage message)
     {
         NetUpdateColorLobby msg = message as NetUpdateColorLobby;
-        Debug.Log("Update Color Lobby in Client");
         playerList.GetChild(msg.playerValue).GetComponent<PlayerComponent>().UpdateColor(msg.colorValue);
+        PlayerManager.Instance.clients[msg.playerValue].colorValue = msg.colorValue;
+        myPlayerComponent.LockColor();
     }
 }

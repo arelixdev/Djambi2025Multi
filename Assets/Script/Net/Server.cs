@@ -229,8 +229,18 @@ public class Server : MonoBehaviour
             // This also sends a Connect event back the requesting Player,
             // as a means of acknowledging acceptance.
             Debug.Log($"Tentative de connexion détectée : {incomingConnection}");
+            var serverClients = Clients.GetClients();
+            foreach (var client in serverClients)
+            {
+                var matchingClient = PlayerManager.Instance.clients.Find(c => c.playerName == client.playerName);
+                if (matchingClient != null)
+                {
+                    client.playerValue = matchingClient.playerValue;
+                    client.colorValue = matchingClient.colorValue;
+                }
+            }
             connections.Add(incomingConnection);
-            
+
             SendLobbyUpdate();  
         }
 
@@ -282,6 +292,10 @@ public class Server : MonoBehaviour
     public void SendLobbyUpdate()
     {
         Debug.Log("Sending lobby update");
+        foreach(var c in Clients.GetClients())
+        {
+            Debug.Log(c.colorValue);
+        }
         NetUpdateLobby updateLobby = new NetUpdateLobby();
         updateLobby.clients = Clients.GetClients();
         BroadCast(updateLobby);
