@@ -124,7 +124,6 @@ public class GameUI : MonoBehaviour
     public void UpdateLobbyClient()
     {
         numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/{GetNumberPlayerValue()})";
-        Debug.Log("Player Clients" + PlayerManager.Instance.clients.Count);
         //Clear list 
         foreach (Transform child in playerList)
         {
@@ -141,10 +140,16 @@ public class GameUI : MonoBehaviour
             }
             playerComponent.SetPlayerName(client.playerName);
             playerComponent.SetupColor(client.colorValue);
+            playerComponent.UpdateReady(client.isReady);
             if(i != PlayerManager.Instance.GetPlayerValue())
             {
                 playerComponent.DesactivateBtn();
             }   
+        }
+
+        foreach(var client in PlayerManager.Instance.clients)
+        {
+            client.isReady = 0;
         }
     }
 
@@ -257,19 +262,9 @@ public class GameUI : MonoBehaviour
     }
 
 
-    bool isReady = false;
-
     public void OnWaitingRoomReadyBtn()
     {
-        isReady = !isReady;
-        if(isReady)
-        {
-            myPlayerComponent.SetReady();
-        }
-        else
-        {
-            myPlayerComponent.SetNotReady();
-        }
+        myPlayerComponent.SetReady();
 
         //TODO send ready to server and broadcast to all player if all player ready start game after X seconds
         
@@ -308,23 +303,34 @@ public class GameUI : MonoBehaviour
      private void RegisterEvents()
     {
         NetUtility.S_UPDATE_COLOR_LOBBY += OnUpdateColorLobbyServer;
+        NetUtility.S_UPDATE_READY_LOBBY += OnUpdateReadyLobbyServer;
 
         NetUtility.C_START_GAME += OnStartGameClient; 
         NetUtility.C_UPDATE_COLOR_LOBBY += OnUpdateColorLobbyClient;
+        NetUtility.C_UPDATE_READY_LOBBY += OnUpdateReadyLobbyClient;
     }
 
     private void UnregisterEvents()
     {
         NetUtility.S_UPDATE_COLOR_LOBBY -= OnUpdateColorLobbyServer;
+        NetUtility.S_UPDATE_READY_LOBBY -= OnUpdateReadyLobbyServer;
 
         NetUtility.C_START_GAME -= OnStartGameClient;
         NetUtility.C_UPDATE_COLOR_LOBBY -= OnUpdateColorLobbyClient;
+        NetUtility.C_UPDATE_READY_LOBBY -= OnUpdateReadyLobbyClient;
     }
 
     private void OnUpdateColorLobbyServer(NetMessage message, NetworkConnection cnn)
     {
         NetUpdateColorLobby msg = message as NetUpdateColorLobby;
         PlayerManager.Instance.clients[msg.playerValue].colorValue = msg.colorValue;
+        Server.Instance.BroadCast(msg);
+    }
+
+    private void OnUpdateReadyLobbyServer(NetMessage message, NetworkConnection cnn)
+    {
+        NetUpdateReadyLobby msg = message as NetUpdateReadyLobby;
+        PlayerManager.Instance.clients[msg.playerValue].isReady = msg.isReady;
         Server.Instance.BroadCast(msg);
     }
 
@@ -339,5 +345,24 @@ public class GameUI : MonoBehaviour
         playerList.GetChild(msg.playerValue).GetComponent<PlayerComponent>().UpdateColor(msg.colorValue);
         PlayerManager.Instance.clients[msg.playerValue].colorValue = msg.colorValue;
         myPlayerComponent.LockColor();
+    }
+
+    internal void OnUpdateReadyLobbyClient(NetMessage message)
+    {
+        NetUpdateReadyLobby msg = message as NetUpdateReadyLobby;
+        playerList.GetChild(msg.playerValue).GetComponent<PlayerComponent>().UpdateReady(msg.isReady);
+        if(msg.isReady == 1)
+        {
+            PlayerManager.Instance.clients[msg.playerValue].isReady = 1;
+        }
+        else
+        {
+            PlayerManager.Instance.clients[msg.playerValue].isReady = 0;
+        }
+
+        if(DjambiBoard.Instance.GetCurrentTeam() == 0)
+        {
+            Server.Instance.UpdateLobbyInformation();
+        }
     }
 }

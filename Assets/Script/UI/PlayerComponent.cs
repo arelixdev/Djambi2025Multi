@@ -15,6 +15,8 @@ public class PlayerComponent : MonoBehaviour
     public List<GameObject> colors;
     public GameObject ready;
 
+    public bool isReady;
+
     private void Start() {
         ready.SetActive(false);
         colorPicker.SetActive(false);
@@ -42,12 +44,19 @@ public class PlayerComponent : MonoBehaviour
 
     internal void SetReady()
     {
-        ready.SetActive(true);
+        isReady = !isReady;
+
+        ready.SetActive(isReady);
+        NetUpdateReadyLobby ur = new NetUpdateReadyLobby();
+        ur.isReady = isReady ? 1 : 0;
+        ur.playerValue = PlayerManager.Instance.GetPlayerValue();  
+        Client.Instance.SendToServer(ur);
+        
     }
 
-    internal void SetNotReady()
+    public void UpdateReady(int isReady)
     {
-        ready.SetActive(false);
+        ready.SetActive(isReady == 1);
     }
 
     public void ChangeColor(int colorValue)

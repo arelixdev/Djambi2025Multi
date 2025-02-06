@@ -4,6 +4,7 @@ public class NetClientInformation : NetMessage
 {
     public string playerName{set;get;} 
     public int playerValue{set;get;}
+    public int isReady{set;get;}
     public NetClientInformation() // <-- Making the box
     {
         Code = OpCode.CLIENT_INFORMATION;
@@ -20,6 +21,7 @@ public class NetClientInformation : NetMessage
         writer.WriteByte((byte)Code);
         writer.WriteFixedString128(playerName); 
         writer.WriteInt(playerValue);
+        writer.WriteInt(isReady);
     }
 
     public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
@@ -27,6 +29,7 @@ public class NetClientInformation : NetMessage
         //We already read the byte in the NetUtility::OnData
         playerName = reader.ReadFixedString128().ToString();
         playerValue = reader.ReadInt();
+        isReady = reader.ReadInt();
     }
 
     public override void ReceivedOnClient()

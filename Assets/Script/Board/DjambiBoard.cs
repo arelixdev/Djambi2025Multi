@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using Unity.Networking.Transport;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -72,6 +73,11 @@ public class DjambiBoard : MonoBehaviour
     public GameObject GetTiles(int posX,int posY)
     {
         return tiles[posX, posY];
+    }
+
+    public int GetCurrentTeam()
+    {
+        return currentTeam;
     }
 
 
@@ -1089,7 +1095,8 @@ public class DjambiBoard : MonoBehaviour
         Server.Instance.Clients.Add(new ClientInformation { 
             playerName = nci.playerName, 
             playerValue = nci.playerValue, 
-            colorValue = newColor
+            colorValue = newColor,
+            isReady = nci.isReady
         });
 
         Server.Instance.BroadCast(message);
@@ -1197,7 +1204,6 @@ public class DjambiBoard : MonoBehaviour
             if (!alreadyExists)
             {
                 PlayerManager.Instance.clients.Add(client);
-                Debug.Log("Client added: " + client.playerName + " " + client.colorValue);
             }
         }
         GameUI.Instance.UpdateLobbyClient();

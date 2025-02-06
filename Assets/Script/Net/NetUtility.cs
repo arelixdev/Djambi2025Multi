@@ -11,7 +11,8 @@ public enum OpCode{
     REMATCH = 6,
     CLIENT_INFORMATION = 7,
     UPDATE_LOBBY = 8,
-    UPDATE_COLOR_LOBBY = 9
+    UPDATE_COLOR_LOBBY = 9,
+    UPDATE_READY_LOBBY = 10,
 }
 
 public static class NetUtility
@@ -49,6 +50,9 @@ public static class NetUtility
             case OpCode.UPDATE_COLOR_LOBBY:
                 msg = new NetUpdateColorLobby(stream);
                 break;
+            case OpCode.UPDATE_READY_LOBBY:
+                msg = new NetUpdateReadyLobby(stream);
+                break;
             default:
                 Debug.Log("Unknown OpCode: " + opCode);
                 break;
@@ -74,6 +78,7 @@ public static class NetUtility
     public static Action<NetMessage> C_CLIENT_INFORMATION;
     public static Action<NetMessage> C_UPDATE_LOBBY;
     public static Action<NetMessage> C_UPDATE_COLOR_LOBBY;
+    public static Action<NetMessage> C_UPDATE_READY_LOBBY;
     public static Action<NetMessage, NetworkConnection> S_KEEP_ALIVE;
     public static Action<NetMessage, NetworkConnection> S_WELCOME;
     public static Action<NetMessage, NetworkConnection> S_START_GAME;
@@ -83,4 +88,5 @@ public static class NetUtility
     public static Action<NetMessage, NetworkConnection> S_CLIENT_INFORMATION;
     public static Action<NetMessage, NetworkConnection> S_UPDATE_LOBBY;
     public static Action<NetMessage, NetworkConnection> S_UPDATE_COLOR_LOBBY;
+    public static Action<NetMessage, NetworkConnection> S_UPDATE_READY_LOBBY;
 }

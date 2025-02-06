@@ -17,6 +17,7 @@ public class ClientInformation{
     public string playerName;
     public int playerValue;
     public int colorValue;
+    public int isReady;
 }
 
 public class ClientList
@@ -232,6 +233,7 @@ public class Server : MonoBehaviour
             var serverClients = Clients.GetClients();
             foreach (var client in serverClients)
             {
+                Debug.Log("Client found in PlayerManager" + client.isReady);
                 var matchingClient = PlayerManager.Instance.clients.Find(c => c.playerName == client.playerName);
                 if (matchingClient != null)
                 {
@@ -246,16 +248,36 @@ public class Server : MonoBehaviour
 
         UpdateMessagePump();
 
+        if (Input.GetKeyDown(KeyCode.L)) // Remplace "L" par la touche de ton choix
+        {
+            Debug.Log("Liste des clients connectés:");
+            var clients = Clients.GetClients();
+            foreach (var client in clients)
+            {
+                Debug.Log($"Nom: {client.playerName}, Valeur: {client.playerValue}, Couleur: {client.colorValue}, Prêt: {client.isReady}");
+            }
+
+            UpdateLobbyInformation();
+        }
+
+
     }
 
-    private void KeepAlive()
+    public void UpdateLobbyInformation()
     {
-        if(Time.time - lastKeepAlive > keepAliveTickRate)
+        var serverClients = Clients.GetClients();
+        foreach (var client in serverClients)
         {
-            lastKeepAlive = Time.time;
-            BroadCast(new NetKeepAlive());
+            var matchingClient = PlayerManager.Instance.clients.Find(c => c.playerName == client.playerName);
+            if (matchingClient != null)
+            { 
+                client.playerValue = matchingClient.playerValue;
+                client.colorValue = matchingClient.colorValue;
+                client.isReady = matchingClient.isReady;
+            }
         }
     }
+
     private void UpdateMessagePump()
     {
         DataStreamReader stream;
@@ -291,11 +313,6 @@ public class Server : MonoBehaviour
 
     public void SendLobbyUpdate()
     {
-        Debug.Log("Sending lobby update");
-        foreach(var c in Clients.GetClients())
-        {
-            Debug.Log(c.colorValue);
-        }
         NetUpdateLobby updateLobby = new NetUpdateLobby();
         updateLobby.clients = Clients.GetClients();
         BroadCast(updateLobby);
