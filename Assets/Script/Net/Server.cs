@@ -250,7 +250,6 @@ public class Server : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L)) // Remplace "L" par la touche de ton choix
         {
-            Debug.Log("Liste des clients connectés:");
             var clients = Clients.GetClients();
             foreach (var client in clients)
             {
@@ -276,6 +275,22 @@ public class Server : MonoBehaviour
                 client.isReady = matchingClient.isReady;
             }
         }
+
+        // Vérifier si tous les joueurs sont prêts
+        bool allPlayersReady = serverClients.All(client => client.isReady == 1);
+
+        // Vérifier si le nombre de joueurs prêts correspond au nombre attendu
+        if (allPlayersReady && serverClients.Count == GameUI.Instance.GetNumberPlayerValue())
+        {
+            StartGame();
+        }
+    }
+
+    private void StartGame()
+    {
+        // Implémentation du démarrage de la partie
+        Debug.Log("Tous les joueurs sont prêts, lancement du jeu !");
+        // Ajouter ici la logique pour charger la scène de jeu, initialiser les joueurs, etc.
     }
 
     private void UpdateMessagePump()
