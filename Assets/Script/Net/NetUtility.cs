@@ -13,6 +13,7 @@ public enum OpCode{
     UPDATE_LOBBY = 8,
     UPDATE_COLOR_LOBBY = 9,
     UPDATE_READY_LOBBY = 10,
+    UPDATE_COUNTDOWN_LOBBY = 11,
 }
 
 public static class NetUtility
@@ -53,6 +54,9 @@ public static class NetUtility
             case OpCode.UPDATE_READY_LOBBY:
                 msg = new NetUpdateReadyLobby(stream);
                 break;
+            case OpCode.UPDATE_COUNTDOWN_LOBBY:
+                msg = new NetCountdownLobby(stream);
+                break;
             default:
                 Debug.Log("Unknown OpCode: " + opCode);
                 break;
@@ -79,6 +83,7 @@ public static class NetUtility
     public static Action<NetMessage> C_UPDATE_LOBBY;
     public static Action<NetMessage> C_UPDATE_COLOR_LOBBY;
     public static Action<NetMessage> C_UPDATE_READY_LOBBY;
+    public static Action<NetMessage> C_UPDATE_COUNTDOWN_LOBBY;
     public static Action<NetMessage, NetworkConnection> S_KEEP_ALIVE;
     public static Action<NetMessage, NetworkConnection> S_WELCOME;
     public static Action<NetMessage, NetworkConnection> S_START_GAME;
@@ -89,4 +94,5 @@ public static class NetUtility
     public static Action<NetMessage, NetworkConnection> S_UPDATE_LOBBY;
     public static Action<NetMessage, NetworkConnection> S_UPDATE_COLOR_LOBBY;
     public static Action<NetMessage, NetworkConnection> S_UPDATE_READY_LOBBY;
+    public static Action<NetMessage, NetworkConnection> S_UPDATE_COUNTDOWN_LOBBY;
 }
