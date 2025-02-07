@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using UnityEngine.Assertions;
+using System.Collections;
 
 [Serializable]
 public class ClientInformation{
@@ -247,19 +248,6 @@ public class Server : MonoBehaviour
         }
 
         UpdateMessagePump();
-
-        if (Input.GetKeyDown(KeyCode.L)) // Remplace "L" par la touche de ton choix
-        {
-            var clients = Clients.GetClients();
-            foreach (var client in clients)
-            {
-                Debug.Log($"Nom: {client.playerName}, Valeur: {client.playerValue}, Couleur: {client.colorValue}, Prêt: {client.isReady}");
-            }
-
-            UpdateLobbyInformation();
-        }
-
-
     }
 
     public void UpdateLobbyInformation()
@@ -286,12 +274,52 @@ public class Server : MonoBehaviour
         }
     }
 
+    private Coroutine startGameCoroutine;
+
     private void StartGame()
     {
-        // Implémentation du démarrage de la partie
-        Debug.Log("Tous les joueurs sont prêts, lancement du jeu !");
-        // Ajouter ici la logique pour charger la scène de jeu, initialiser les joueurs, etc.
+        if (startGameCoroutine != null)
+        {
+            StopCoroutine(startGameCoroutine);
+        }
+        startGameCoroutine = StartCoroutine(StartGameCountdown());
     }
+
+
+    private IEnumerator StartGameCountdown()
+    {
+        float countdown = 3f;
+
+        while (countdown > 0)
+        {
+            GameUI.Instance.UpdateCountdownDisplay(countdown);
+            yield return new WaitForSeconds(1f);
+            countdown--;
+
+            // Vérifier si tous les joueurs sont toujours prêts
+            var serverClients = Clients.GetClients();
+            bool allPlayersReady = serverClients.All(client => client.isReady == 1);
+            
+            if (!allPlayersReady)
+            {
+                GameUI.Instance.UpdateCountdownDisplay(0);
+                startGameCoroutine = null;
+                yield break; // Stop la coroutine
+            }
+        }
+
+        Debug.Log("Lancement du jeu !");
+        GameUI.Instance.UpdateCountdownDisplay(0);
+        if (DjambiBoard.Instance.GetPlayerCount() < 1)
+        {
+            startGameCoroutine = null;
+            yield break;
+        }
+
+        BroadCast(new NetStartGame());
+        startGameCoroutine = null; // Réinitialiser la référence
+    }
+
 
     private void UpdateMessagePump()
     {

@@ -42,10 +42,13 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameObject waitingCreationRoomPanel; 
     [SerializeField] private TMP_Text roomNameText;
     [SerializeField] private TMP_Text numberPlayerWaitingGame;
+
+    [SerializeField] private TMP_Text countdownText;
     [SerializeField] private TMP_Text roomCodeText;
     [SerializeField] private Transform playerList;
     [SerializeField] private GameObject playerComponentPrefab;
     [SerializeField] private Button startButton;
+    
     private string hiddenText = "********";
     private PlayerComponent myPlayerComponent;
     
@@ -75,6 +78,7 @@ public class GameUI : MonoBehaviour
     {
         createRoomPanel.SetActive(false);
         joinRoomPanel.SetActive(false);
+        countdownText.gameObject.SetActive(false);
 
         playerNameInputfield.text = PlayerManager.Instance.GetPlayerName();
         playerNameInputfield.onValueChanged.AddListener((string newText) => {
@@ -150,6 +154,19 @@ public class GameUI : MonoBehaviour
         foreach(var client in PlayerManager.Instance.clients)
         {
             client.isReady = 0;
+        }
+    }
+
+    public void UpdateCountdownDisplay(float timeRemaining)
+    {
+        if (timeRemaining > 0)
+        {
+            countdownText.text = $"Démarrage dans {Mathf.Ceil(timeRemaining)}...";
+            countdownText.gameObject.SetActive(true);
+        }
+        else
+        {
+            countdownText.gameObject.SetActive(false);
         }
     }
 
