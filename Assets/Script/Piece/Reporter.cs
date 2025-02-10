@@ -22,10 +22,6 @@ public class Reporter : PieceType
                 }
                 if(board[currentX, i] != null)
                 {
-                    if(board[currentX, i].team != team && !board[currentX, i].isDead )
-                    {
-                        r.Add(new Vector2Int(currentX, i));
-                    }
                     break;
                 }
             }
@@ -45,10 +41,6 @@ public class Reporter : PieceType
                 }
                 if(board[currentX, i] != null)
                 {
-                    if(board[currentX, i].team != team && !board[currentX, i].isDead )
-                    {
-                        r.Add(new Vector2Int(currentX, i));
-                    }
                     break;
                 }
             }
@@ -67,10 +59,6 @@ public class Reporter : PieceType
                 }
                 if(board[i, currentY ] != null)
                 {
-                    if(board[i, currentY ].team != team && !board[i, currentY].isDead)
-                    {
-                        r.Add(new Vector2Int(i, currentY));
-                    }
                     break;
                 }
             }
@@ -89,10 +77,6 @@ public class Reporter : PieceType
                 }
                 if(board[i, currentY ] != null)
                 {
-                    if(board[i, currentY ].team != team && !board[i, currentY].isDead)
-                    {
-                        r.Add(new Vector2Int(i, currentY));
-                    }
                     break;
                 }
             }
@@ -110,10 +94,6 @@ public class Reporter : PieceType
                     r.Add(new Vector2Int(x, y));
                 }
                 else {
-                    if(board[x, y].team != team && !board[x, y].isDead)
-                    {
-                        r.Add(new Vector2Int(x, y));
-                    }
                     break;
                 }
             }
@@ -131,10 +111,6 @@ public class Reporter : PieceType
                     r.Add(new Vector2Int(x, y));
                 }
                 else {
-                    if(board[x, y].team != team && !board[x, y].isDead)
-                    {
-                        r.Add(new Vector2Int(x, y));
-                    }
                     break;
                 }
             }
@@ -152,10 +128,6 @@ public class Reporter : PieceType
                     r.Add(new Vector2Int(x, y));
                 }
                 else {
-                    if(board[x, y].team != team && !board[x, y].isDead)
-                    {
-                        r.Add(new Vector2Int(x, y));
-                    }
                     break;
                 }
             }
@@ -175,10 +147,6 @@ public class Reporter : PieceType
                     r.Add(new Vector2Int(x, y));
                 }
                 else {
-                    if(board[x, y].team != team && !board[x, y].isDead)
-                    {
-                        r.Add(new Vector2Int(x, y));
-                    }
                     break;
                 }
             }
