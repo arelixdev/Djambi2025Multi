@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class NetCountdownLobby : NetMessage
 {
+    public float countdown;
     public NetCountdownLobby() // <-- Making the box
     {
         Code = OpCode.UPDATE_COUNTDOWN_LOBBY;
@@ -20,10 +21,12 @@ public class NetCountdownLobby : NetMessage
      public override void Serialize(ref DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
+        writer.WriteFloat(countdown);
     }
 
     public override void Deserialize(ref DataStreamReader reader)
     {
+        countdown = reader.ReadFloat();
     }
 
     public override void ReceivedOnClient()

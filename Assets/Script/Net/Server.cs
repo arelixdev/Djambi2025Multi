@@ -289,10 +289,13 @@ public class Server : MonoBehaviour
     private IEnumerator StartGameCountdown()
     {
         float countdown = 3f;
+        NetCountdownLobby msg = new NetCountdownLobby();
 
         while (countdown > 0)
         {
-            GameUI.Instance.UpdateCountdownDisplay(countdown);
+            
+            msg.countdown = countdown;
+            BroadCast(msg);
             yield return new WaitForSeconds(1f);
             countdown--;
 
@@ -302,14 +305,18 @@ public class Server : MonoBehaviour
             
             if (!allPlayersReady)
             {
-                GameUI.Instance.UpdateCountdownDisplay(0);
+                msg = new NetCountdownLobby();
+                msg.countdown = 0;
+                BroadCast(msg);
                 startGameCoroutine = null;
                 yield break; // Stop la coroutine
             }
         }
 
         Debug.Log("Lancement du jeu !");
-        GameUI.Instance.UpdateCountdownDisplay(0);
+        msg = new NetCountdownLobby();
+        msg.countdown = 0;
+        BroadCast(msg);
         if (DjambiBoard.Instance.GetPlayerCount() < 1)
         {
             startGameCoroutine = null;

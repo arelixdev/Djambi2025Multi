@@ -321,20 +321,25 @@ public class GameUI : MonoBehaviour
     {
         NetUtility.S_UPDATE_COLOR_LOBBY += OnUpdateColorLobbyServer;
         NetUtility.S_UPDATE_READY_LOBBY += OnUpdateReadyLobbyServer;
+        NetUtility.S_UPDATE_COUNTDOWN_LOBBY += UpdateCountdownDisplayServer;
+
 
         NetUtility.C_START_GAME += OnStartGameClient; 
         NetUtility.C_UPDATE_COLOR_LOBBY += OnUpdateColorLobbyClient;
         NetUtility.C_UPDATE_READY_LOBBY += OnUpdateReadyLobbyClient;
+        NetUtility.C_UPDATE_COUNTDOWN_LOBBY += UpdateCountdownDisplayClient;
     }
 
     private void UnregisterEvents()
     {
         NetUtility.S_UPDATE_COLOR_LOBBY -= OnUpdateColorLobbyServer;
         NetUtility.S_UPDATE_READY_LOBBY -= OnUpdateReadyLobbyServer;
+        NetUtility.S_UPDATE_COUNTDOWN_LOBBY -= UpdateCountdownDisplayServer;
 
         NetUtility.C_START_GAME -= OnStartGameClient;
         NetUtility.C_UPDATE_COLOR_LOBBY -= OnUpdateColorLobbyClient;
         NetUtility.C_UPDATE_READY_LOBBY -= OnUpdateReadyLobbyClient;
+        NetUtility.C_UPDATE_COUNTDOWN_LOBBY -= UpdateCountdownDisplayClient;
     }
 
     private void OnUpdateColorLobbyServer(NetMessage message, NetworkConnection cnn)
@@ -348,6 +353,12 @@ public class GameUI : MonoBehaviour
     {
         NetUpdateReadyLobby msg = message as NetUpdateReadyLobby;
         PlayerManager.Instance.clients[msg.playerValue].isReady = msg.isReady;
+        Server.Instance.BroadCast(msg);
+    }
+
+    private void UpdateCountdownDisplayServer(NetMessage message, NetworkConnection cnn)
+    {
+        NetCountdownLobby msg = message as NetCountdownLobby;
         Server.Instance.BroadCast(msg);
     }
 
@@ -381,5 +392,11 @@ public class GameUI : MonoBehaviour
         {
             Server.Instance.UpdateLobbyInformation();
         }
+    }
+
+    internal void UpdateCountdownDisplayClient(NetMessage message)
+    {
+        NetCountdownLobby msg = message as NetCountdownLobby;
+        UpdateCountdownDisplay(msg.countdown);
     }
 }
