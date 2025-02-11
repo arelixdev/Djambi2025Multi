@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security.Policy;
 using Unity.Networking.Transport;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class DjambiBoard : MonoBehaviour
 {
@@ -18,10 +18,12 @@ public class DjambiBoard : MonoBehaviour
     [SerializeField] private float yOffset = 0.2f;
     [SerializeField] private float dragOffset = 0.5f;
     [SerializeField] private Vector3 boardCenter = Vector3.zero;
+    
 
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] prefabs;
     [SerializeField] private Material[] teamMaterials;
+    [SerializeField] private GameObject[] playerImages;
 
     public bool oneTimeAgain = false;
     private int keepTeamWithoutChef = 0;
@@ -1150,6 +1152,20 @@ public class DjambiBoard : MonoBehaviour
         } else if(currentTeam == 2 || currentTeam == 3)
         {
             GameUI.Instance.ChangeCamera(cameraAngle.topSide);
+        }
+
+        for(int i = 0; i < PlayerManager.Instance.clients.Count; i++)
+        {
+            Color playerColor = PlayerManager.Instance.colorList[PlayerManager.Instance.clients[i].colorValue];
+
+            teamMaterials[i].color = playerColor;
+            playerImages[i].GetComponent<Image>().color = playerColor;
+
+            // Vérifier que GetTurnElements() a bien la même taille que clients
+            if (i < TurnInterfaceManager.instance.GetTurnElements().Count)
+            {
+                TurnInterfaceManager.instance.GetTurnElements()[i].SetupColor(playerColor);
+            }
         }
     }
 

@@ -26,6 +26,20 @@ public class TurnElement : MonoBehaviour
         yourColor.SetActive(isYourColor);
     }
 
+    public void SetupColor(Color color)
+    {
+        activeColor = color;
+        chefElement.GetComponent<Image>().color = color;
+        deadElement.GetComponent<Image>().color = color;
+        Color.RGBToHSV(color, out float h, out float s, out float v);
+
+        // Réduction de la saturation
+        v = Mathf.Clamp01(v - 0.4f); // Réduit de 10% et s'assure qu'on reste entre 0 et 1
+
+        // Conversion en RGB
+        desactiveColor = Color.HSVToRGB(h, s, v);
+    }
+
     public void ActiveTurn()
     {
         transform.localScale = new Vector3(1, 1, 1);

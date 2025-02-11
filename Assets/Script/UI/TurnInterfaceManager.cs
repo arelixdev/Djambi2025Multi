@@ -13,6 +13,11 @@ public class TurnInterfaceManager : MonoBehaviour
         instance = this;
     }
 
+    public List<TurnElement> GetTurnElements()
+    {
+        return turnElements;
+    }
+
     public void SetTurn(int teamTurn)
     {
         for (int i = 0; i < turnElements.Count; i++)
