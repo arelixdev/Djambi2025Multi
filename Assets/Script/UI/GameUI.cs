@@ -208,6 +208,7 @@ public class GameUI : MonoBehaviour
 
     public void OnOnlineJoinButton()
     {
+        SetLocalGame?.Invoke(false);
         joinRoomPanel.SetActive(true);
     }
 
