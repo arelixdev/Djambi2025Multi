@@ -127,7 +127,8 @@ public class GameUI : MonoBehaviour
 
     public void UpdateLobbyClient()
     {
-        numberPlayerWaitingGame.text = $"({DjambiBoard.Instance.GetPlayerCount()+1}/{GetNumberPlayerValue()})";
+        Debug.Log("UpdateLobbyClient" + DjambiBoard.Instance.GetPlayerCount() + " " + PlayerManager.Instance.clients.Count);
+        numberPlayerWaitingGame.text = $"({PlayerManager.Instance.clients.Count}/{GetNumberPlayerValue()})";
         //Clear list 
         foreach (Transform child in playerList)
         {

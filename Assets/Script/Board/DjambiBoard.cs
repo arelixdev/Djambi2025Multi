@@ -202,7 +202,6 @@ public class DjambiBoard : MonoBehaviour
                         nm.endTurn = 0;
                     }
                     Client.Instance.SendToServer(nm);
-                    Debug.Log("Sending to server" + nm.endTurn);
 
                 } else 
                 {
@@ -821,7 +820,6 @@ public class DjambiBoard : MonoBehaviour
         
         if(!moveTo && !cd.isDead && cd.team == teamTurn && !notResetStart)
         {
-            Debug.Log("Move to " + x + " " + y);
             boardPieces[previousPosition.x, previousPosition.y] = null;
         }
 
@@ -909,7 +907,6 @@ public class DjambiBoard : MonoBehaviour
 
     public void SetBoardPiece(int x, int y, PieceType piece)
     {
-        Debug.Log("SetBoardPiece" + x + " " + y + " " + piece);
         boardPieces[x, y] = piece;
         if(piece != null)
         {

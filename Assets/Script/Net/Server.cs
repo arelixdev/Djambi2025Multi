@@ -234,7 +234,6 @@ public class Server : MonoBehaviour
             var serverClients = Clients.GetClients();
             foreach (var client in serverClients)
             {
-                Debug.Log("Client found in PlayerManager" + client.isReady);
                 var matchingClient = PlayerManager.Instance.clients.Find(c => c.playerName == client.playerName);
                 if (matchingClient != null)
                 {

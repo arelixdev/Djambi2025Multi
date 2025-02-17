@@ -207,7 +207,6 @@ public class Militant : PieceType
 
     public override void Action(PieceType target , Vector2Int initialPosition = default)
     {
-        Debug.Log("Militant Action");
         DjambiBoard.Instance.SetBoardPiece(initialPosition.x, initialPosition.y, null);
         DjambiBoard.Instance.SetMovePieceDragging(target);
         target.Die();
