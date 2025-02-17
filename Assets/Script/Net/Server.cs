@@ -322,7 +322,9 @@ public class Server : MonoBehaviour
             yield break;
         }
 
-        BroadCast(new NetStartGame());
+        NetStartGame startGame = new NetStartGame();
+        startGame.whoStart = UnityEngine.Random.Range(0, GameUI.Instance.GetNumberPlayerValue());
+        BroadCast(startGame);
         startGameCoroutine = null; // Réinitialiser la référence
     }
 

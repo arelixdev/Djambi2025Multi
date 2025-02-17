@@ -1143,6 +1143,11 @@ public class DjambiBoard : MonoBehaviour
     private void OnStartGameClient(NetMessage message)
     {
         InitBoardUnit();
+
+        NetStartGame sm = message as NetStartGame;
+
+        teamTurn = sm.whoStart;
+
         if(currentTeam == 0 || currentTeam == 1)
         {
             GameUI.Instance.ChangeCamera(cameraAngle.botSide);
@@ -1164,6 +1169,8 @@ public class DjambiBoard : MonoBehaviour
                 TurnInterfaceManager.instance.GetTurnElements()[i].SetupColor(playerColor);
             }
         }
+
+        TurnInterfaceManager.instance.SetTurn(teamTurn);
     }
 
     private void OnMakeMoveClient(NetMessage message)

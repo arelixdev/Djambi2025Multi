@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NetStartGame : NetMessage
 {
+    public int whoStart;
 
     public NetStartGame() // <-- Making the box
     {
@@ -18,11 +19,13 @@ public class NetStartGame : NetMessage
     public override void Serialize(ref Unity.Collections.DataStreamWriter writer)
     {
         writer.WriteByte((byte)Code);
+        writer.WriteInt(whoStart);
     }
 
     public override void Deserialize(ref Unity.Collections.DataStreamReader reader)
     {
         //We already read the byte in the NetUtility::OnData
+        whoStart = reader.ReadInt();
     }
 
     public override void ReceivedOnClient()
