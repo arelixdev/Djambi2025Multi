@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Unity.Networking.Transport;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public enum cameraAngle{
     menu = 0,
@@ -127,7 +128,6 @@ public class GameUI : MonoBehaviour
 
     public void UpdateLobbyClient()
     {
-        Debug.Log("UpdateLobbyClient" + DjambiBoard.Instance.GetPlayerCount() + " " + PlayerManager.Instance.clients.Count);
         numberPlayerWaitingGame.text = $"({PlayerManager.Instance.clients.Count}/{GetNumberPlayerValue()})";
         //Clear list 
         foreach (Transform child in playerList)
@@ -183,10 +183,17 @@ public class GameUI : MonoBehaviour
 
     //Button
 
-    public void OnLocalButton()
+    public void OnLocalButtonClick()
+    {
+        OnLocalButton();
+    }
+
+    public async Task OnLocalButton()
     {
         menuAnimator.SetTrigger("InGameMenu");
         SetLocalGame?.Invoke(true);
+        await server.Init(1, "roomName");
+        await Client.Instance.Init(Server.Instance.GetJoinCode());
     }
 
     #region OnlineMenu
