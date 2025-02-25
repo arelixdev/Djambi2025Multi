@@ -365,6 +365,8 @@ public class Server : MonoBehaviour
     {
         NetUpdateLobby updateLobby = new NetUpdateLobby();
         updateLobby.clients = Clients.GetClients();
+        updateLobby.numberClientsMax = GameUI.Instance.GetNumberPlayerValue();
+
         BroadCast(updateLobby);
     }
 

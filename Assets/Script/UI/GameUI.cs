@@ -126,9 +126,9 @@ public class GameUI : MonoBehaviour
         client.SendToServer(ci);
     }
 
-    public void UpdateLobbyClient()
+    public void UpdateLobbyClient(int numberMaxClient)
     {
-        numberPlayerWaitingGame.text = $"({PlayerManager.Instance.clients.Count}/{GetNumberPlayerValue()})";
+        numberPlayerWaitingGame.text = $"({PlayerManager.Instance.clients.Count}/{numberMaxClient})";
         //Clear list 
         foreach (Transform child in playerList)
         {

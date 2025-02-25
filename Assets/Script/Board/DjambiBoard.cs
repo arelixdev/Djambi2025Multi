@@ -1229,7 +1229,7 @@ public class DjambiBoard : MonoBehaviour
                 PlayerManager.Instance.clients.Add(client);
             }
         }
-        GameUI.Instance.UpdateLobbyClient();
+        GameUI.Instance.UpdateLobbyClient(msg.numberClientsMax);
     }
 
     //Not Network

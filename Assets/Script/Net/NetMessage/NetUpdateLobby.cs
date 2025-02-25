@@ -6,6 +6,8 @@ using UnityEngine;
 public class NetUpdateLobby : NetMessage
 {
     public List<ClientInformation> clients = new List<ClientInformation>();
+    public int numberClientsMax;
+
     public NetUpdateLobby() // <-- Making the box
     {
         Code = OpCode.UPDATE_LOBBY;
@@ -28,6 +30,8 @@ public class NetUpdateLobby : NetMessage
             writer.WriteInt(client.playerValue);
             writer.WriteInt(client.colorValue);
         }
+
+        writer.WriteInt(numberClientsMax);
     }
 
     public override void Deserialize(ref DataStreamReader reader)
@@ -45,6 +49,8 @@ public class NetUpdateLobby : NetMessage
             };
             clients.Add(client);
         }
+
+        numberClientsMax = reader.ReadInt();
     }
 
     public override void ReceivedOnClient()
