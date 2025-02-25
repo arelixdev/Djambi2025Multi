@@ -16,21 +16,21 @@ public class TurnElement : MonoBehaviour
 
     void Start()
     {
-        chefElement.SetActive(false);
-        deadElement.SetActive(false);
-        yourColor.SetActive(false);
+        //chefElement.SetActive(false);
+        //deadElement.SetActive(false);
+        //yourColor.SetActive(false);
     }
 
     public void SetYourColor(bool isYourColor)
     {
-        yourColor.SetActive(isYourColor);
+        //yourColor.SetActive(isYourColor);
     }
 
     public void SetupColor(Color color)
     {
         activeColor = color;
-        chefElement.GetComponent<Image>().color = color;
-        deadElement.GetComponent<Image>().color = color;
+        //chefElement.GetComponent<Image>().color = color;
+        //deadElement.GetComponent<Image>().color = color;
         Color.RGBToHSV(color, out float h, out float s, out float v);
 
         // Réduction de la saturation
