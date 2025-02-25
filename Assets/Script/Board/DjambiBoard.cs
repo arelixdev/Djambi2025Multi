@@ -779,7 +779,7 @@ public class DjambiBoard : MonoBehaviour
                 if(pieceType.isDead && currentTeam == teamTurn)
                 {
                     
-                    if(chefInLab == null && cd.form != PieceForm.Chef)
+                    if(chefInLab == null && cd.form == PieceForm.Chef)
                     {
                         movePieceAgain = cd;
                         Debug.Log("MovePieceAgain" + movePieceAgain);
@@ -1137,6 +1137,10 @@ public class DjambiBoard : MonoBehaviour
         if(localGame && currentTeam == 0)
         {
             Server.Instance.BroadCast(new NetStartGame());
+            TurnInterfaceManager.instance.SetPlayerName(0, "Player 1");
+            TurnInterfaceManager.instance.SetPlayerName(1, "Player 2");
+            TurnInterfaceManager.instance.SetPlayerName(2, "Player 3");
+            TurnInterfaceManager.instance.SetPlayerName(3, "Player 4");
         } 
     }
 

@@ -97,6 +97,12 @@ public class TurnInterfaceManager : MonoBehaviour
 
     }
 
+
+    public void SetPlayerName(int team, string playerName)
+    {
+        turnElements[team].SetupName(playerName);
+    }
+
     internal void PlayerPanelPosition(bool v)
     {
         if(!v)
