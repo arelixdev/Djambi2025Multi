@@ -1151,9 +1151,11 @@ public class DjambiBoard : MonoBehaviour
         if(currentTeam == 0 || currentTeam == 1)
         {
             GameUI.Instance.ChangeCamera(cameraAngle.botSide);
+            TurnInterfaceManager.instance.PlayerPanelPosition(false);
         } else if(currentTeam == 2 || currentTeam == 3)
         {
             GameUI.Instance.ChangeCamera(cameraAngle.topSide);
+            TurnInterfaceManager.instance.PlayerPanelPosition(true);
         }
 
         for(int i = 0; i < PlayerManager.Instance.clients.Count; i++)

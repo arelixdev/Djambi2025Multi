@@ -8,6 +8,8 @@ public class TurnInterfaceManager : MonoBehaviour
     public static TurnInterfaceManager instance;
     [SerializeField] private List<TurnElement> turnElements;
 
+    [SerializeField] private List<Transform> turnElementsPosition;
+
     private void Awake()
     {
         instance = this;
@@ -93,5 +95,20 @@ public class TurnInterfaceManager : MonoBehaviour
             turnElements[i].SetDead(false);
         }
 
+    }
+
+    internal void PlayerPanelPosition(bool v)
+    {
+        if(!v)
+            return;
+
+        turnElements[0].transform.parent = turnElementsPosition[2];
+        turnElements[0].transform.localPosition = Vector3.zero;
+        turnElements[1].transform.parent = turnElementsPosition[3];
+        turnElements[1].transform.localPosition = Vector3.zero;
+        turnElements[2].transform.parent = turnElementsPosition[0];
+        turnElements[2].transform.localPosition = Vector3.zero;
+        turnElements[3].transform.parent = turnElementsPosition[1];
+        turnElements[3].transform.localPosition = Vector3.zero;
     }
 }
