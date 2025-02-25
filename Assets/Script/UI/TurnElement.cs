@@ -8,9 +8,6 @@ using UnityEngine.UI;
 public class TurnElement : MonoBehaviour
 {
     [SerializeField] private Color activeColor;
-    [SerializeField] private Color desactiveColor;
-
-    [SerializeField] private GameObject yourColor;
     [SerializeField] private GameObject teamColor;
     [SerializeField] private GameObject yourTurn;
     [SerializeField] private TextMeshProUGUI playerNameTxt;
@@ -19,9 +16,8 @@ public class TurnElement : MonoBehaviour
 
     void Start()
     {
-        //chefElement.SetActive(false);
-        //deadElement.SetActive(false);
-        //yourColor.SetActive(false);
+        chefElement.SetActive(false);
+        deadElement.SetActive(false);
         yourTurn.SetActive(false);
     }
 
@@ -33,15 +29,6 @@ public class TurnElement : MonoBehaviour
     public void SetupColor(Color color)
     {
         activeColor = color;
-        //chefElement.GetComponent<Image>().color = color;
-        //deadElement.GetComponent<Image>().color = color;
-        Color.RGBToHSV(color, out float h, out float s, out float v);
-
-        // Réduction de la saturation
-        v = Mathf.Clamp01(v - 0.4f); // Réduit de 10% et s'assure qu'on reste entre 0 et 1
-
-        // Conversion en RGB
-        desactiveColor = Color.HSVToRGB(h, s, v);
     }
 
     public void SetupName(string name)

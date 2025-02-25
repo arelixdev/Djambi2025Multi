@@ -552,8 +552,8 @@ MonoBehaviour:
   teamColor: {fileID: 6626900255768718896}
   yourTurn: {fileID: 5632035498917569588}
   playerNameTxt: {fileID: 3788832217983633631}
-  chefElement: {fileID: 0}
-  deadElement: {fileID: 0}
+  chefElement: {fileID: 1569377342705097249}
+  deadElement: {fileID: 5973879253741044664}
 --- !u!114 &6348535874002050903
 MonoBehaviour:
   m_ObjectHideFlags: 0
