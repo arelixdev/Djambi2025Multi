@@ -468,7 +468,7 @@ RectTransform:
   m_GameObject: {fileID: 6626900255768718896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8930316177729907485}
@@ -550,6 +550,8 @@ MonoBehaviour:
   desactiveColor: {r: 0, g: 0, b: 0, a: 0}
   yourColor: {fileID: 0}
   teamColor: {fileID: 6626900255768718896}
+  yourTurn: {fileID: 5632035498917569588}
+  playerNameTxt: {fileID: 3788832217983633631}
   chefElement: {fileID: 0}
   deadElement: {fileID: 0}
 --- !u!114 &6348535874002050903

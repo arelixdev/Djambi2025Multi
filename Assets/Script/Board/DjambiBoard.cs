@@ -1167,6 +1167,7 @@ public class DjambiBoard : MonoBehaviour
             if (i < TurnInterfaceManager.instance.GetTurnElements().Count)
             {
                 TurnInterfaceManager.instance.GetTurnElements()[i].SetupColor(playerColor);
+                TurnInterfaceManager.instance.GetTurnElements()[i].SetupName(PlayerManager.Instance.clients[i].playerName);
             }
         }
 
