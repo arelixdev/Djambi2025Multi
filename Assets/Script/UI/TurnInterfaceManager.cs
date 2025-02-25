@@ -8,6 +8,8 @@ public class TurnInterfaceManager : MonoBehaviour
     public static TurnInterfaceManager instance;
     [SerializeField] private List<TurnElement> turnElements;
 
+    [SerializeField] private List<TurnElement> turnElementsNew;
+
     private void Awake()
     {
         instance = this;

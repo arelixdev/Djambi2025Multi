@@ -277,10 +277,10 @@ public class Server : MonoBehaviour
 
     private void StartGame()
     {
-        if (startGameCoroutine != null)
+        /*if (startGameCoroutine != null)
         {
             StopCoroutine(startGameCoroutine);
-        }
+        }*/
         startGameCoroutine = StartCoroutine(StartGameCountdown());
     }
 
@@ -321,7 +321,8 @@ public class Server : MonoBehaviour
             startGameCoroutine = null;
             yield break;
         }
-
+        
+        BroadCast(new NetStartGame());
         
         startGameCoroutine = null; // Réinitialiser la référence
     }
