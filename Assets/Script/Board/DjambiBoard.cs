@@ -18,6 +18,7 @@ public class DjambiBoard : MonoBehaviour
     [SerializeField] private float yOffset = 0.2f;
     [SerializeField] private float dragOffset = 0.5f;
     [SerializeField] private Vector3 boardCenter = Vector3.zero;
+    [SerializeField] private GameObject rockGenerator;
     
 
     [Header("Prefabs & Materials")]
@@ -360,6 +361,7 @@ public class DjambiBoard : MonoBehaviour
 
         tileObject.layer = LayerMask.NameToLayer("Tile");
         tileObject.AddComponent<BoxCollider>();
+        Instantiate(rockGenerator, tileObject.transform);
 
         return tileObject;
     }
