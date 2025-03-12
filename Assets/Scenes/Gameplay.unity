@@ -166,6 +166,16 @@ MonoBehaviour:
   - {r: 0.93333334, g: 0.5925349, b: 0.04705882, a: 1}
   - {r: 0.5647059, g: 0.5647059, b: 0.5647059, a: 1}
   - {r: 0.24705884, g: 0.24705884, b: 0.24705884, a: 1}
+  allSkeletonMaterials:
+  - {fileID: 2100000, guid: e4e400d48fcfa294bb81c22791500ebc, type: 2}
+  - {fileID: 2100000, guid: 5f6d969be92430d48bdc465394b4ab45, type: 2}
+  - {fileID: 2100000, guid: 227e7d19e69eef146987c77c388e7612, type: 2}
+  - {fileID: 2100000, guid: a77911882182159429745d510117569e, type: 2}
+  allGlowSkeletonMaterials:
+  - {fileID: 2100000, guid: 867ddd50b115c314a87f4f5cec4f68bf, type: 2}
+  - {fileID: 2100000, guid: 534193cdbde0afc44a4c1f24d73b8982, type: 2}
+  - {fileID: 2100000, guid: 3856e0f945d7bc941bc1fb6ee2f1e990, type: 2}
+  - {fileID: 2100000, guid: f09e5631fb310ea45b515cbad20eb76d, type: 2}
 --- !u!4 &23847071
 Transform:
   m_ObjectHideFlags: 0
@@ -14206,7 +14216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3160993102099900176, guid: b0164ac0f145afd4881573a61c15a436, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3565765335228573926, guid: b0164ac0f145afd4881573a61c15a436, type: 3}
       propertyPath: m_RootOrder

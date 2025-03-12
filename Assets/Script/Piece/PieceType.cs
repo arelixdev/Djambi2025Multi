@@ -26,6 +26,8 @@ public abstract class PieceType : MonoBehaviour
     public PieceForm form;
     public bool isDead = false;
 
+    public SkeletonColorManager skeletonColorManager;
+
     [SerializeField] private GameObject[] pieceTeam;
     [SerializeField] private GameObject pieceAlive;
     [SerializeField] private GameObject pieceDead;
@@ -44,20 +46,24 @@ public abstract class PieceType : MonoBehaviour
     {
         if(team == 0)
         {
-            gameObject.name = $"Red_{form}";
+            gameObject.name = $"Team1_{form}";
+            skeletonColorManager.SetMaterial(0, 0);
         } else if(team == 1)
         {
-            gameObject.name = $"Blue_{form}";
+            gameObject.name = $"Team2_{form}";
+            skeletonColorManager.SetMaterial(1, 1);
         } else if(team == 2)
         {
-            gameObject.name = $"Green_{form}";
+            gameObject.name = $"Team3_{form}";
             transform.rotation = Quaternion.Euler(0, 180, 0); // Rotation de 180° sur l'axe Y
+            skeletonColorManager.SetMaterial(2, 2);
             
             
         } else if(team == 3)
         {
-            gameObject.name = $"Yellow_{form}";
+            gameObject.name = $"Team4_{form}";
             transform.rotation = Quaternion.Euler(0, 180, 0); // Rotation de 180° sur l'axe Y
+            skeletonColorManager.SetMaterial(3, 3);
         }
     }
 

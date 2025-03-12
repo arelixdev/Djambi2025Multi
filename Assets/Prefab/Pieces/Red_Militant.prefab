@@ -386,6 +386,7 @@ MonoBehaviour:
   currentY: 0
   form: 0
   isDead: 0
+  skeletonColorManager: {fileID: 9169424879101015578}
   pieceTeam:
   - {fileID: 4310865938018137891}
   - {fileID: 4118863884779558496}
@@ -742,3 +743,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8760146034478125073, guid: db13047c429c90e4aaebe5ed491e492b, type: 3}
   m_PrefabInstance: {fileID: 6144582510415449110}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9169424879101015578 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3028009274700069388, guid: db13047c429c90e4aaebe5ed491e492b, type: 3}
+  m_PrefabInstance: {fileID: 6144582510415449110}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4637f8c12695984caa7f2eec3ff7239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

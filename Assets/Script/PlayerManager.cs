@@ -13,6 +13,9 @@ public class PlayerManager : MonoBehaviour
 
     public List<Color> colorList = new List<Color>();
 
+    public List<Material> allSkeletonMaterials = new List<Material>();
+    public List<Material> allGlowSkeletonMaterials = new List<Material>();
+
     private string playerName;
     private int playerValue;
     private int colorValue;
