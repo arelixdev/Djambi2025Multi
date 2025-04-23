@@ -624,22 +624,22 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: TextMeshPro
-    EmbeddedLinux: TextMeshPro
-    GameCoreScarlett: TextMeshPro
-    GameCoreXboxOne: TextMeshPro
-    LinuxHeadlessSimulation: TextMeshPro
-    Nintendo Switch: TextMeshPro
-    PS4: TextMeshPro
-    PS5: TextMeshPro
-    QNX: TextMeshPro
-    Stadia: TextMeshPro
-    Standalone: TextMeshPro;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3
-    WebGL: TextMeshPro
-    Windows Store Apps: TextMeshPro
-    XboxOne: TextMeshPro
-    iPhone: TextMeshPro
-    tvOS: TextMeshPro
+    Android: TextMeshPro;DOTWEEN
+    EmbeddedLinux: TextMeshPro;DOTWEEN
+    GameCoreScarlett: TextMeshPro;DOTWEEN
+    GameCoreXboxOne: TextMeshPro;DOTWEEN
+    LinuxHeadlessSimulation: TextMeshPro;DOTWEEN
+    Nintendo Switch: TextMeshPro;DOTWEEN
+    PS4: TextMeshPro;DOTWEEN
+    PS5: TextMeshPro;DOTWEEN
+    QNX: TextMeshPro;DOTWEEN
+    Stadia: TextMeshPro;DOTWEEN
+    Standalone: TextMeshPro;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN
+    WebGL: TextMeshPro;DOTWEEN
+    Windows Store Apps: TextMeshPro;DOTWEEN
+    XboxOne: TextMeshPro;DOTWEEN
+    iPhone: TextMeshPro;DOTWEEN
+    tvOS: TextMeshPro;DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
